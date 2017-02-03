@@ -78,17 +78,12 @@ class IDER_Admin
             <div>
                 <strong>Setting up IDer Client Account</strong>
                 <ol>
-                    <li>Create a new client and set the Redirect URI to:
-                        <strong><?php echo site_url('?auth=sso'); ?></strong></li>
+                    <li>Create a new client and set the Redirect URI (aka callback URL) to:
+                        <strong><?php echo site_url('CallBack'); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
+                    <li>Set the campaign id to retrieve the user data you chosen.</li>
+                    <li>If you need it set the offline QR campaign as <strong><?php echo site_url('?auth=sso&scope='); ?>&lt;campaign_id&gt;</strong> in IDER Parter admin page</li>
                 </ol>
-                <strong>How to use</strong>
-                <p>
-                    When activated, this plugin adds a Single Sign On button to the login screen. If you want to add a
-                    custom link anywhere in your theme simply link to
-                    <strong><?php echo site_url('?auth=sso'); ?></strong>
-                    if the user is not logged in. Logging out the user is done as normal.
-                </p>
             </div>
             <form method="post" action="options.php">
                 <?php settings_fields('wposso_options'); ?>
@@ -111,17 +106,7 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                        <th scope="row">OAuth Server URL</th>
-                        <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[server_url]" min="10"
-                                   value="<?php echo $options["server_url"]; ?>"/>
-                            <p class="description">Example: https://your-site.com</p>
-                        </td>
-                    </tr>
-
-
-                    <tr valign="top">
-                        <th scope="row">Additional Scopes</th>
+                        <th scope="row">Campaign IDs</th>
                         <td>
                             <input type="text" name="<?php echo $this->option_name ?>[extra_scopes]" min="10"
                                    value="<?php echo $options["extra_scopes"]; ?>"/>
@@ -129,6 +114,15 @@ class IDER_Admin
                         </td>
                     </tr>
 
+                    <tr valign="top">
+                    <th scope="row">Sync user data with IDER server after each login</th>
+                    <td>
+                        <input type="checkbox" name="<?php echo $this->option_name ?>[keep_synced]"
+                               value="1" <?php echo $options['keep_synced'] == 1 ? 'checked="checked"' : ''; ?> />
+                    </td>
+                    </tr>
+
+                    <tr valign="top">
 
                     <th scope="row">Add IDER button in the classic WP login form</th>
                     <td>
@@ -137,20 +131,39 @@ class IDER_Admin
                     </td>
                     </tr>
 
+
                     <tr valign="top">
-                        <th scope="row">Redirect to the dashboard after signing in</th>
+                        <th scope="row">Redirect to the IDER welcome page</th>
                         <td>
                             <input type="checkbox" name="<?php echo $this->option_name ?>[redirect_to_dashboard]"
                                    value="1" <?php echo $options['redirect_to_dashboard'] == 1 ? 'checked="checked"' : ''; ?> />
                         </td>
                     </tr>
 
+
                     <tr valign="top">
+                        <th scope="row">Welcome page</th>
+                        <td>
+                            <?php echo site_url(); ?>/<input type="text" name="<?php echo $this->option_name ?>[welcome_page]" min="10"
+                                   value="<?php echo $options["welcome_page"]; ?>"/>
+                        </td>
+                    </tr>
+
                 </table>
 
                 <!--
                 <h3 class="seperator">Advanced Options</h3>
                 <table class="form-table">
+
+                    <tr valign="top">
+                        <th scope="row">OAuth Server URL</th>
+                        <td>
+                            <input type="text" name="<?php echo $this->option_name ?>[server_url]" min="10"
+                                   value="<?php echo $options["server_url"]; ?>"/>
+                            <p class="description">Example: https://your-site.com</p>
+                        </td>
+                    </tr>
+
                     <tr valign="top">
                         <th scope="row">Authorization Endpoint</th>
                         <td>

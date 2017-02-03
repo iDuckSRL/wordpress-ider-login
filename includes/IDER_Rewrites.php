@@ -37,6 +37,7 @@ class IDER_Rewrites
     function add_query_vars($qvars)
     {
         $qvars[] = 'auth';
+        $qvars[] = 'scope';
         return $qvars;
     }
 
@@ -59,19 +60,23 @@ class IDER_Rewrites
            // exit;
         }
 
-
-        if ($wp_query->get('auth') == 'sso') {
+        if ('sso' == $wp_query->get('auth')) {
             IDER_Callbacks::generate_authorization_url();
             exit;
         }
 
-        if ($wp_query->get('name') == 'callback' && !empty($_GET['code'])) {
+        if ('callback' == $wp_query->get('name') && !empty($_GET['code'])) {
             IDER_Callbacks::redeem_authorization_code();
             exit;
         }
 
-        if ($wp_query->get('name') == 'callback' && !empty($_REQUEST['error'])) {
+        if ('callback' == $wp_query->get('name') && !empty($_REQUEST['error'])) {
             IDER_Callbacks::access_denied();
+            exit;
+        }
+
+        if ('welcome' === ($wp_query->get('name'))) {
+            IDER_Callbacks::welcomePage();
             exit;
         }
 

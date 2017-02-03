@@ -52,28 +52,35 @@ IDER_Server::instance();
 /* If you need customization (ie: field map) you can write below */
 add_filter('ider_fields_map', function($fields){
 
-    $fields['billing_first_name'] = 'firstname';
-    $fields['billing_last_name'] = 'familyname';
-    // $fields['billing_company'] = '';
+    $fields['ider_sub'] = 'sub';
+    $fields['first_name'] = 'given_name';
+    $fields['last_name'] = 'family_name';
+    $fields['email'] = 'email';
+    $fields['url'] = 'given_name';
+    $fields['description'] = 'given_name';
+
+    $fields['billing_first_name'] = 'given_name';
+    $fields['billing_last_name'] = 'family_name';
+    $fields['billing_company'] = '';
     $fields['billing_address_1'] = 'residential_address';
-    // $fields['billing_address_2'] = '';
-    // $fields['billing_city'] = '';
+    $fields['billing_address_2'] = '';
+    $fields['billing_city'] = '';
     $fields['billing_postcode'] = 'residential_zipcode';
     $fields['billing_country'] = 'address_country';
-    // $fields['billing_state'] = '';
-    // $fields['billing_phone'] = '';
+    $fields['billing_state'] = '';
+    $fields['billing_phone'] = '';
     $fields['billing_email'] = 'email';
 
-    $fields['shipping_first_name'] = 'firstname';
-    $fields['shipping_last_name'] = 'familyname';
-    // $fields['shipping_company'] = '';
+    $fields['shipping_first_name'] = 'given_name';
+    $fields['shipping_last_name'] = 'family_name';
+    $fields['shipping_company'] = '';
     $fields['shipping_address_1'] = 'delivery_address';
-    // $fields['shipping_address_2'] = '';
-    // $fields['shipping_city'] = '';
+    $fields['shipping_address_2'] = '';
+    $fields['shipping_city'] = '';
     $fields['shipping_postcode'] = 'delivery_zipcode';
     $fields['shipping_country'] = 'address_country';
-    // $fields['shipping_state'] = '';
-    // $fields['shipping_phone'] = '';
+    $fields['shipping_state'] = '';
+    $fields['shipping_phone'] = '';
     $fields['shipping_email'] = 'email';
 
     return $fields;

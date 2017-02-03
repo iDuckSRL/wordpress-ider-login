@@ -21,7 +21,10 @@ class IDER_Server
     protected $default_settings = array(
         'client_id' => '',
         'client_secret' => '',
-        'extra_scopes' => 'xgox'
+        'extra_scopes' => 'xgox',
+        'keep_synced' => true,
+        'redirect_to_dashboard' => true,
+        'landing_url' => 'welcome'
     );
 
     public static $endpoints = array(
@@ -40,8 +43,11 @@ class IDER_Server
 
     static function init()
     {
+        spl_autoload_register(array(__CLASS__, 'autoloader'));
 
-        add_action("init", array(__CLASS__, "includes"));
+
+        self::includes();
+        //add_action("init", array(__CLASS__, "includes"));
         add_action('admin_menu', array(__CLASS__, 'register_activation_hooks'));
 
         // add IDER login button to WP login form
@@ -50,8 +56,6 @@ class IDER_Server
             add_action('login_form', [IDer_Helpers, 'wp_sso_login_form_button']);
         }
 
-
-        spl_autoload_register( array( __CLASS__, 'autoloader' ) );
     }
 
 
@@ -83,6 +87,7 @@ class IDER_Server
      */
     public static function includes()
     {
+        IDER_Widget::init();
         IDER_Admin::init();
         IDER_Widget::init();
         IDER_Rewrites::init();
@@ -120,18 +125,19 @@ class IDER_Server
     }
 
 
-    private static function autoloader($class){
+    private static function autoloader($class)
+    {
         $path = IDER_PLUGIN_DIR;
         $paths = array();
         $exts = array('.php', '.class.php');
 
         $paths[] = $path;
-        $paths[] = $path.'includes/';
+        $paths[] = $path . 'includes/';
 
-        foreach($paths as $p)
-            foreach($exts as $ext){
-                if(file_exists($p.$class.$ext)){
-                    require_once($p.$class.$ext);
+        foreach ($paths as $p)
+            foreach ($exts as $ext) {
+                if (file_exists($p . $class . $ext)) {
+                    require_once($p . $class . $ext);
                     return true;
                 }
             }
