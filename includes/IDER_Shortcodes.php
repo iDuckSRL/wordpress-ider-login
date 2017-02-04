@@ -54,8 +54,8 @@ class IDER_Shortcodes
         }
 
 
-        $table = '<h2>Welcome ' . $usermetas['first_name'][0] . ' ' . $usermetas['last_name'][0] . '</h2>';
-        $table .= '<h3>You have been authenticated via IDer<sup>&copy;</sup> system. <small>Go to the <a href="/">Home Page</a>.</small></h3>';
+        $table = '<h3>Welcome ' . $usermetas['first_name'][0] . ' ' . $usermetas['last_name'][0] . '</h3>';
+        $table .= '<h4>You have been authenticated via IDer<sup>&copy;</sup> system.</h4>';
         $table .= '<table class="form-table">';
         $table .= '<tbody>' . $tbody . '</tbody>';
         $table .= '</table>';

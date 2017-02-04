@@ -75,10 +75,5 @@ class IDER_Rewrites
             exit;
         }
 
-        if ('ider-welcome' === ($wp_query->get('name'))) {
-            IDER_Callbacks::welcomePage();
-            exit;
-        }
-
     }
 }

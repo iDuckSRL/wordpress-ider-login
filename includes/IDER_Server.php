@@ -93,6 +93,7 @@ class IDER_Server
         IDER_Widget::init();
         IDER_Rewrites::init();
         IDER_Shortcodes::init();
+        IDER_WooPage::init();
 
     }
 
