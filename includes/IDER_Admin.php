@@ -46,7 +46,7 @@ class IDER_Admin
      */
     public function add_page()
     {
-        add_menu_page('IDer SSO', 'IDer SSO', 'manage_options', 'wposso_settings', array(
+        add_menu_page('IDer Login', 'IDer Login', 'manage_options', 'wposso_settings', array(
             $this,
             'options_do_page'
         ), IDER_PLUGIN_URL . 'assets/images/logo_ider.png');

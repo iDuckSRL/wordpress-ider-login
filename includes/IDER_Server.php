@@ -24,7 +24,7 @@ class IDER_Server
         'extra_scopes' => 'xgox',
         'keep_synced' => true,
         'redirect_to_dashboard' => true,
-        'landing_url' => 'welcome'
+        'landing_url' => 'ider-welcome'
     );
 
     public static $endpoints = array(

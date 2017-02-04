@@ -60,7 +60,7 @@ class IDER_Rewrites
            // exit;
         }
 
-        if ('sso' == $wp_query->get('auth')) {
+        if ('ider' == $wp_query->get('auth')) {
             IDER_Callbacks::generate_authorization_url();
             exit;
         }
@@ -75,7 +75,7 @@ class IDER_Rewrites
             exit;
         }
 
-        if ('welcome' === ($wp_query->get('name'))) {
+        if ('ider-welcome' === ($wp_query->get('name'))) {
             IDER_Callbacks::welcomePage();
             exit;
         }
