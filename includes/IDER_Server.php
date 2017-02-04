@@ -18,13 +18,13 @@ class IDER_Server
     public static $_instance = null;
 
     /** Default Settings */
-    protected $default_settings = array(
+    protected static $default_settings = array(
         'client_id' => '',
         'client_secret' => '',
-        'extra_scopes' => 'xgox',
-        'keep_synced' => true,
+        'extra_scopes' => '',
         'redirect_to_dashboard' => true,
-        'landing_url' => 'ider-welcome'
+        'login_form_button' => true,
+        'welcome_page' => 'ider-welcome'
     );
 
     public static $endpoints = array(
@@ -46,10 +46,7 @@ class IDER_Server
     {
         spl_autoload_register(array(__CLASS__, 'autoloader'));
 
-
-        self::includes();
         //add_action("init", array(__CLASS__, "includes"));
-        add_action('admin_menu', array(__CLASS__, 'register_activation_hooks'));
 
         // add IDER login button to WP login form
         $options = get_option('wposso_options');
@@ -57,16 +54,19 @@ class IDER_Server
             add_action('login_form', [IDer_Helpers, 'wp_sso_login_form_button']);
         }
 
+        self::register_activation_hooks();
+        self::includes();
+
     }
 
 
     /**
      * Plugin Initializer
      */
-    function register_activation_hooks()
+    public static function register_activation_hooks()
     {
-        register_activation_hook(__FILE__, array(__CLASS__, 'setup'));
-        register_activation_hook(__FILE__, array(__CLASS__, 'upgrade'));
+        register_activation_hook(IDER_PLUGIN_FILE, array(__CLASS__, 'setup'));
+        register_activation_hook(IDER_PLUGIN_FILE, array(__CLASS__, 'upgrade'));
     }
 
     /**
@@ -104,25 +104,8 @@ class IDER_Server
     {
         $options = get_option("wposso_options");
         if (!isset($options["server_url"])) {
-            update_option("wposso_options", $this->default_settings);
+            update_option("wposso_options", self::$default_settings);
         }
-
-        $this->install();
-    }
-
-
-    /**
-     * Plugin Install
-     */
-    public function install()
-    {
-    }
-
-    /**
-     * Plugin Upgrade
-     */
-    public function upgrade()
-    {
     }
 
 

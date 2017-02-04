@@ -115,14 +115,6 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row">Sync user data with IDer server after each login</th>
-                    <td>
-                        <input type="checkbox" name="<?php echo $this->option_name ?>[keep_synced]"
-                               value="1" <?php echo $options['keep_synced'] == 1 ? 'checked="checked"' : ''; ?> />
-                    </td>
-                    </tr>
-
-                    <tr valign="top">
 
                     <th scope="row">Add IDer button in the classic WP login form</th>
                     <td>

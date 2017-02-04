@@ -61,6 +61,7 @@ class IDER_Callbacks
             'sslverify' => false
         ];
 
+        IDER_Helpers::logRotate(str_repeat('-', 64));
         IDER_Helpers::logRotate('Call URL: ' . $server_url, 'ider-auth');
         IDER_Helpers::logRotate('-- Request: ' . print_r($request, 1), 'ider-auth');
 
@@ -123,11 +124,7 @@ class IDER_Callbacks
             $newuser = true;
         }
 
-        // save token data
-        // TODO: this should be a user option!! Not a client option.
-        if ($newuser or $options['keep_synced']) {
-            update_user_meta($user->ID, 'ider_token', $tokens);
-        }
+        update_user_meta($user->ID, 'ider_token', $tokens);
 
         // Log the User In
         self::_login($user);
