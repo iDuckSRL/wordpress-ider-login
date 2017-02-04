@@ -22,6 +22,9 @@ class IDER_Callbacks
 
         $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . $params;
         $url_nonced = $url . '&nonce=' . md5(wp_create_nonce($url));
+
+        IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
+        IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
         IDER_Helpers::logRotate('Call URL: ' . $url_nonced, 'ider-auth');
 
         wp_redirect($url_nonced);
@@ -34,6 +37,10 @@ class IDER_Callbacks
 // Handle the callback from the server is there is one.
     static function redeem_authorization_code()
     {
+        IDER_Helpers::logRotate('Call URL: ' . $_SERVER['REQUEST_URI'], 'ider-auth');
+
+        IDER_Helpers::logRotate('Redeem Auth code' . str_repeat(' -', 64), 'ider-auth');
+
         $options = get_option('wposso_options');
 
         // Grab a copy of the options and set the redirect location.
@@ -61,13 +68,12 @@ class IDER_Callbacks
             'sslverify' => false
         ];
 
-        IDER_Helpers::logRotate(str_repeat('-', 64));
-        IDER_Helpers::logRotate('Call URL: ' . $server_url, 'ider-auth');
-        IDER_Helpers::logRotate('-- Request: ' . print_r($request, 1), 'ider-auth');
+        IDER_Helpers::logRotate('Call curl URL: ' . $server_url, 'ider-auth');
+        IDER_Helpers::logRotate('Request: ' . print_r($request, 1), 'ider-auth');
 
         $response = wp_remote_post($server_url, $request);
 
-        IDER_Helpers::logRotate('-- Response: ' . print_r($response, 1), 'ider-auth');
+        IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
         // var_dump($server_url);
         // var_dump($request);
@@ -91,23 +97,27 @@ class IDER_Callbacks
             'sslverify' => false
         ];
 
-        IDER_Helpers::logRotate('Call URL: ' . $server_url, 'ider-auth');
-        IDER_Helpers::logRotate('-- Request: ' . print_r($request, 1), 'ider-auth');
+
+        IDER_Helpers::logRotate('Retrieve user infos' . str_repeat(' -', 64), 'ider-auth');
+
+
+        IDER_Helpers::logRotate('Call curl URL: ' . $server_url, 'ider-auth');
+        IDER_Helpers::logRotate('Request: ' . print_r($request, 1), 'ider-auth');
 
         $response = wp_remote_get($server_url, $request);
 
-        IDER_Helpers::logRotate('-- Response: ' . print_r($response, 1), 'ider-auth');
+        IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
 
         if (is_wp_error($response)) {
-            IDER_Helpers::logRotate('-- Error: ' . $response->error, 'ider-auth');
+            IDER_Helpers::logRotate('Error: ' . $response->error, 'ider-auth');
             wp_die($response->error);
         }
 
 
         $user_info = json_decode($response['body']);
 
-        // var_dump($user_info);exit;
+        IDER_Helpers::logRotate('Ider returned user data: ' . print_r($user_info, 1), 'ider-auth');
 
         $user_info = (object)self::fieldsMap((array)$user_info);
 
@@ -243,24 +253,6 @@ class IDER_Callbacks
     }
 
 
-    public static function welcomePage()
-    {
-        wp_enqueue_style('jlm-loginbox-css', JLM_PLUGIN_URL . 'assets/css/loginbox.css', false, JLM_CLIENT_VERSION, 'all');
-
-        get_header();
-        ?>
-
-        <div id="primary" class="content-area">
-            <main id="main" class="site-main" role="main">
-                    <?php echo IDER_Shortcodes::ider_profile_summary(); ?>
-            </main><!-- #main -->
-        </div><!-- #primary -->
-
-        <?php
-        get_footer();
-        die();
-
-    }
 
 
 }

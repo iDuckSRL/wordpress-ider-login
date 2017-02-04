@@ -21,6 +21,8 @@ class IDer_Helpers
 
     static function logRotate($text, $filename, $ext = 'log')
     {
+        $text = "[" .strftime("%Y-%m-%d %H:%M:%S") . "] " . $text . "\n";
+
         // add basepath
         $filename = IDER_PLUGIN_DIR . 'logs/' . $filename;
 
