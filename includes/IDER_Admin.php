@@ -82,7 +82,7 @@ class IDER_Admin
                         <strong><?php echo site_url('CallBack'); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chosen.</li>
-                    <li>If you need it set the offline QR campaign as <strong><?php echo site_url('?auth=sso&scope='); ?>&lt;campaign_id&gt;</strong> in IDER Parter admin page</li>
+                    <li>If you need it set the offline QR campaign as <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter admin page</li>
                 </ol>
             </div>
             <form method="post" action="options.php">
@@ -115,7 +115,7 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                    <th scope="row">Sync user data with IDER server after each login</th>
+                    <th scope="row">Sync user data with IDer server after each login</th>
                     <td>
                         <input type="checkbox" name="<?php echo $this->option_name ?>[keep_synced]"
                                value="1" <?php echo $options['keep_synced'] == 1 ? 'checked="checked"' : ''; ?> />
@@ -124,7 +124,7 @@ class IDER_Admin
 
                     <tr valign="top">
 
-                    <th scope="row">Add IDER button in the classic WP login form</th>
+                    <th scope="row">Add IDer button in the classic WP login form</th>
                     <td>
                         <input type="checkbox" name="<?php echo $this->option_name ?>[login_form_button]"
                                value="1" <?php echo $options['login_form_button'] == 1 ? 'checked="checked"' : ''; ?> />
@@ -133,7 +133,7 @@ class IDER_Admin
 
 
                     <tr valign="top">
-                        <th scope="row">Redirect to the IDER welcome page</th>
+                        <th scope="row">Redirect to the IDer welcome page</th>
                         <td>
                             <input type="checkbox" name="<?php echo $this->option_name ?>[redirect_to_dashboard]"
                                    value="1" <?php echo $options['redirect_to_dashboard'] == 1 ? 'checked="checked"' : ''; ?> />

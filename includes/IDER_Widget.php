@@ -17,8 +17,8 @@ class IDER_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
             'ider_widget', // Base ID
-            __( 'IDer Box', 'ider' ), // Name
-            array( 'description' => __( 'Provide the IDER login', 'ider' ), 'classname' => "ider-widget") // Args
+            __( 'IDer Login', 'ider' ), // Name
+            array( 'description' => __( 'Provide the IDer login button', 'ider' ), 'classname' => "ider-widget") // Args
         );
     }
 

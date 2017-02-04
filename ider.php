@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: IDer Single Sign On Client
+ * Plugin Name: IDer Login
  * Plugin URI: https://oid.ider.com/core
  * Version: 0.1.0
  * Description: Provides Single Sign On integration with IDer Identity Server using OAuth2 specs.

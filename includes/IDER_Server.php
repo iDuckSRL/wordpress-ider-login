@@ -36,7 +36,8 @@ class IDER_Server
     );
 
 
-    function __construct() {
+    function __construct()
+    {
         self::init();
     }
 

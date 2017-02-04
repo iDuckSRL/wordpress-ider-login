@@ -23,7 +23,7 @@ class IDER_Shortcodes
 
 
         if (!is_user_logged_in()) {
-            return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . site_url('?auth=sso') . '" title="' . $a['title'] . '" target="' . $a['target'] . '"><img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px">' . $a['text'] . '</a>';
+            return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . site_url('?auth=ider') . '" title="' . $a['title'] . '" target="' . $a['target'] . '"><img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px">' . $a['text'] . '</a>';
         } else {
             if (!$a['loginonly']) {
                 return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '"><img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px"> Logout</a>';
@@ -55,7 +55,7 @@ class IDER_Shortcodes
 
 
         $table = '<h2>Welcome ' . $usermetas['first_name'][0] . ' ' . $usermetas['last_name'][0] . '</h2>';
-        $table .= '<h3>You have been authenticated via IDER<sup>&copy;</sup> system. <small>Go to the <a href="/">Home Page</a>.</small></h3>';
+        $table .= '<h3>You have been authenticated via IDer<sup>&copy;</sup> system. <small>Go to the <a href="/">Home Page</a>.</small></h3>';
         $table .= '<table class="form-table">';
         $table .= '<tbody>' . $tbody . '</tbody>';
         $table .= '</table>';

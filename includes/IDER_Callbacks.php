@@ -204,7 +204,7 @@ class IDER_Callbacks
 
         // User ID 1 is not allowed
         if ('1' === $user->ID) {
-            wp_die('For security reasons, admin cannot login via IDER.');
+            wp_die('For security reasons, admin cannot login via IDer.');
         }
 
         if (!is_user_logged_in()) {
