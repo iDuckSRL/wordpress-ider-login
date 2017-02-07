@@ -46,10 +46,14 @@ class IDER_Shortcodes
 
         $tbody = '';
         foreach ($fields as $localfield) {
+
+            // skip shipping fields
+            if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
+
             if ($usermetas[$localfield]) {
                 $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>' . $usermetas[$localfield][0] . '</td></tr>';
             } else {
-                $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>--</td></tr>';
+                //$tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>--</td></tr>';
             }
         }
 
