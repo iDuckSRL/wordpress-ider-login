@@ -56,8 +56,8 @@ add_filter('ider_fields_map', function($fields){
     $fields['first_name'] = 'given_name';
     $fields['last_name'] = 'family_name';
     $fields['email'] = 'email';
-    $fields['url'] = 'given_name';
-    $fields['description'] = 'given_name';
+    $fields['url'] = '';
+    $fields['description'] = '';
 
     $fields['billing_first_name'] = 'given_name';
     $fields['billing_last_name'] = 'family_name';
