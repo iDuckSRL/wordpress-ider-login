@@ -24,7 +24,7 @@ class IDER_Server
         'extra_scopes' => '',
         'redirect_to_dashboard' => true,
         'login_form_button' => true,
-        'welcome_page' => 'ider-welcome'
+        'welcome_page' => 'my-account/ider-profile'
     );
 
     public static $endpoints = array(
@@ -51,7 +51,7 @@ class IDER_Server
         // add IDER login button to WP login form
         $options = get_option('wposso_options');
         if ($options['login_form_button'] == 1) {
-            add_action('login_form', [IDer_Helpers, 'wp_sso_login_form_button']);
+            add_action('login_form', [IDER_Helpers, 'wp_sso_login_form_button']);
         }
 
         self::register_activation_hooks();
