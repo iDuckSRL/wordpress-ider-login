@@ -162,12 +162,11 @@ class IDER_Callbacks
 
 
         // TMP: filling missing fields
+        update_user_meta($user_id, 'billing_address_1', 'Via Roma 10');
+        update_user_meta($user_id, 'billing_postcode', '10100');
         update_user_meta($user_id, 'billing_city', 'Torino');
         update_user_meta($user_id, 'billing_state', 'TO');
-        update_user_meta($user_id, 'shipping_city', 'Torino');
-        update_user_meta($user_id, 'shipping_state', 'TO');
         update_user_meta($user_id, 'billing_phone', '347-8585743');
-        update_user_meta($user_id, 'shipping_phone', '349-9730953');
     }
 
 
