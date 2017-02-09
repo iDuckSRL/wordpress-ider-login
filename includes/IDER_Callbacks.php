@@ -52,13 +52,14 @@ class IDER_Callbacks
             IDER_Helpers::logRotate('State NOT invalid. Halt.', 'ider-auth');
             return false;
         } else {
-            IDER_Helpers::logRotate('State valid', 'ider-auth');
+            setcookie('_erdist');
+            IDER_Helpers::logRotate('State valid. Cookie unset.', 'ider-auth');
         }
 
 
         // once must be valid
         $params = self::getAuthorizationParams();
-        $params['state'] = $_COOKIE['_erdist'];
+        $params['state'] = $_GET['state'];
 
         $params = http_build_query($params);
 
