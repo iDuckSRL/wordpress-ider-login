@@ -10,18 +10,21 @@ class IDER_Callbacks
     {
         $options = get_option('wposso_options');
 
+        $state = md5($options['client_id'] . $options['client_secret'] . time());
+        setcookie('_erdist', $state, time() + 500);
+
         $params = array(
             'client_id' => $options['client_id'],
             'response_type' => 'code',
             'scope' => 'openid ' . (self::getOverridingScope() ?: $options['extra_scopes']),
             'redirect_uri' => site_url('/CallBack'),
-            'state' => md5($options['client_id'] . $options['client_secret'] . time()),
+            'state' => $state,
         );
 
         $params = http_build_query($params);
 
         $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . $params;
-        $url_nonced = $url . '&nonce=' . md5(wp_create_nonce($url));
+        $url_nonced = $url . '&nonce=' . md5($url);
 
         IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
         IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
@@ -31,7 +34,22 @@ class IDER_Callbacks
         exit;
     }
 
-//  http://www.xgox.net/CallBack?code=6c3d246717f68d526c848376763a343c&state=000303044efcf512f1834342d9298702&session_state=DCGlUH8NDpBqIsCWcO_aGvG0rFhQTmYrnAtwXiyWlF0.e35feb5b595a552aec968487cccde1f7
+// http://www.xgox.net/CallBack?code=6c3d246717f68d526c848376763a343c&state=000303044efcf512f1834342d9298702&session_state=DCGlUH8NDpBqIsCWcO_aGvG0rFhQTmYrnAtwXiyWlF0.e35feb5b595a552aec968487cccde1f7
+
+
+    static function validate_authorization_response()
+    {
+        // state must match
+        if ($_COOKIE['_erdist'] != $_GET['state']) {
+            IDER_Helpers::logRotate('State invalid. Halt.', 'ider-auth');
+            return false;
+        }
+
+        IDER_Helpers::logRotate('State valid', 'ider-auth');
+
+        return true;
+
+    }
 
 
 // Handle the callback from the server is there is one.
@@ -40,6 +58,10 @@ class IDER_Callbacks
         IDER_Helpers::logRotate('Call URL: ' . $_SERVER['REQUEST_URI'], 'ider-auth');
 
         IDER_Helpers::logRotate('Redeem Auth code' . str_repeat(' -', 64), 'ider-auth');
+
+        if (!self::validate_authorization_response()) {
+            self::access_denied('Auth response malformed or invalid');
+        }
 
         $options = get_option('wposso_options');
 
@@ -60,8 +82,6 @@ class IDER_Callbacks
             'body' => array(
                 'grant_type' => 'authorization_code',
                 'code' => $code,
-                //'client_id' => $options['client_id'],
-                //'client_secret' => $options['client_secret'],
                 'redirect_uri' => site_url('/CallBack')
             ),
             'cookies' => array(),
@@ -73,6 +93,7 @@ class IDER_Callbacks
 
         $response = wp_remote_post($server_url, $request);
 
+        unset($response['http_response']);
         IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
         // var_dump($server_url);
@@ -106,6 +127,7 @@ class IDER_Callbacks
 
         $response = wp_remote_get($server_url, $request);
 
+        unset($response['http_response']);
         IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
 
@@ -170,11 +192,11 @@ class IDER_Callbacks
     }
 
 
-    static function access_denied()
+    static function access_denied($errormsg)
     {
         wp_enqueue_style('ider-css', IDER_PLUGIN_URL . 'assets/css/general.css', false, IDER_CLIENT_VERSION, 'all');
 
-        $error_msg = sanitize_text_field($_REQUEST['error']);
+        $error_msg = sanitize_text_field($errormsg);
         get_header();
         echo '<div class="errordiv">';
         echo '<header class="page-header">';

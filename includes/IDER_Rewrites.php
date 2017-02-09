@@ -71,7 +71,7 @@ class IDER_Rewrites
         }
 
         if ('callback' == $wp_query->get('name') && !empty($_REQUEST['error'])) {
-            IDER_Callbacks::access_denied();
+            IDER_Callbacks::access_denied($_REQUEST['error']);
             exit;
         }
 
