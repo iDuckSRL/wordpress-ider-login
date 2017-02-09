@@ -32,7 +32,8 @@ class IDER_Server
         'auth' => 'authorize',
         'token' => 'token',
         'user' => 'userinfo',
-        'logout' => 'endsession'
+        'logout' => 'endsession',
+        'callback' => 'Callback'
     );
 
 

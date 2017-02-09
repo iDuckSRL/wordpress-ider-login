@@ -79,7 +79,7 @@ class IDER_Admin
                 <strong>Setting up IDer Client Account</strong>
                 <ol>
                     <li>Create a new client and set the Redirect URI (aka callback URL) to:
-                        <strong><?php echo site_url('CallBack'); ?></strong></li>
+                        <strong><?php echo site_url(IDER_Server::$endpoints['callback']); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chosen.</li>
                     <li>If you need it set the offline QR campaign as <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter admin page</li>

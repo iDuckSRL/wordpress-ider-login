@@ -12,7 +12,7 @@ class IDER_Callbacks
             'client_id' => $options['client_id'],
             'response_type' => 'code',
             'scope' => 'openid ' . (self::getOverridingScope() ?: $options['extra_scopes']),
-            'redirect_uri' => site_url('/CallBack')
+            'redirect_uri' => site_url(IDER_Server::$endpoints['callback'])
         ];
     }
 
@@ -107,7 +107,7 @@ class IDER_Callbacks
             'body' => array(
                 'grant_type' => 'authorization_code',
                 'code' => $code,
-                'redirect_uri' => site_url('/CallBack')
+                'redirect_uri' => site_url(IDER_Server::$endpoints['callback'])
             ),
             'cookies' => array(),
             'sslverify' => false

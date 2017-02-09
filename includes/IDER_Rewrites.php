@@ -65,12 +65,12 @@ class IDER_Rewrites
             exit;
         }
 
-        if ('callback' == $wp_query->get('name') && !empty($_GET['code'])) {
+        if (strtolower(IDER_Server::$endpoints['callback']) == $wp_query->get('name') && !empty($_GET['code'])) {
             IDER_Callbacks::redeem_authorization_code();
             exit;
         }
 
-        if ('callback' == $wp_query->get('name') && !empty($_REQUEST['error'])) {
+        if (strtolower(IDER_Server::$endpoints['callback']) == $wp_query->get('name') && !empty($_REQUEST['error'])) {
             IDER_Callbacks::access_denied($_REQUEST['error']);
             exit;
         }
