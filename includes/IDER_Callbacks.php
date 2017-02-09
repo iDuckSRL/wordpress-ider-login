@@ -4,22 +4,30 @@
 class IDER_Callbacks
 {
 
+    static function getAuthorizationParams()
+    {
+        $options = get_option('wposso_options');
+
+        return [
+            'client_id' => $options['client_id'],
+            'response_type' => 'code',
+            'scope' => 'openid ' . (self::getOverridingScope() ?: $options['extra_scopes']),
+            'redirect_uri' => site_url('/CallBack')
+        ];
+    }
+
 
 // Authenticate Check and Redirect
     static function generate_authorization_url()
     {
         $options = get_option('wposso_options');
 
+        $params = self::getAuthorizationParams();
+
         $state = md5($options['client_id'] . $options['client_secret'] . time());
         setcookie('_erdist', $state, time() + 500);
 
-        $params = array(
-            'client_id' => $options['client_id'],
-            'response_type' => 'code',
-            'scope' => 'openid ' . (self::getOverridingScope() ?: $options['extra_scopes']),
-            'redirect_uri' => site_url('/CallBack'),
-            'state' => $state,
-        );
+        $params['state'] = $state;
 
         $params = http_build_query($params);
 
@@ -41,18 +49,35 @@ class IDER_Callbacks
     {
         // state must match
         if ($_COOKIE['_erdist'] != $_GET['state']) {
-            IDER_Helpers::logRotate('State invalid. Halt.', 'ider-auth');
+            IDER_Helpers::logRotate('State NOT invalid. Halt.', 'ider-auth');
             return false;
+        } else {
+            IDER_Helpers::logRotate('State valid', 'ider-auth');
         }
 
-        IDER_Helpers::logRotate('State valid', 'ider-auth');
 
+        // once must be valid
+        $params = self::getAuthorizationParams();
+        $params['state'] = $_COOKIE['_erdist'];
+
+        $params = http_build_query($params);
+
+        $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . $params;
+        $nonce = md5($url);
+
+        if ($nonce != $_GET['nonce']) {
+            IDER_Helpers::logRotate('Nonce NOT valid. Halt.', 'ider-auth');
+            return false;
+        } else {
+            IDER_Helpers::logRotate('Nonce valid', 'ider-auth');
+        }
+
+        // all good
         return true;
-
     }
 
 
-// Handle the callback from the server is there is one.
+    // Handle the callback from the server if there is one.
     static function redeem_authorization_code()
     {
         IDER_Helpers::logRotate('Call URL: ' . $_SERVER['REQUEST_URI'], 'ider-auth');
@@ -272,8 +297,6 @@ class IDER_Callbacks
 
         return false;
     }
-
-
 
 
 }
