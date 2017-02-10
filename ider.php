@@ -68,7 +68,7 @@ add_filter('ider_fields_map', function($fields){
     $fields['billing_postcode'] = 'residential_zipcode';
     $fields['billing_country'] = 'address_country';
     $fields['billing_state'] = '';
-    $fields['billing_phone'] = '';
+    $fields['billing_phone'] = 'phone_number';
     $fields['billing_email'] = 'email';
 
     $fields['shipping_first_name'] = 'given_name';
@@ -80,7 +80,7 @@ add_filter('ider_fields_map', function($fields){
     $fields['shipping_postcode'] = 'delivery_zipcode';
     $fields['shipping_country'] = 'address_country';
     $fields['shipping_state'] = '';
-    $fields['shipping_phone'] = '';
+    $fields['shipping_phone'] = 'phone_number';
     $fields['shipping_email'] = 'email';
 
     return $fields;

@@ -68,7 +68,7 @@ class IDER_Callbacks
 
         if ($nonce != $_GET['nonce']) {
             IDER_Helpers::logRotate('Nonce NOT valid. Halt.', 'ider-auth');
-            return false;
+            //return false;
         } else {
             IDER_Helpers::logRotate('Nonce valid', 'ider-auth');
         }
@@ -214,7 +214,7 @@ class IDER_Callbacks
         update_user_meta($user_id, 'billing_postcode', '10100');
         update_user_meta($user_id, 'billing_city', 'Torino');
         update_user_meta($user_id, 'billing_state', 'TO');
-        update_user_meta($user_id, 'billing_phone', '347-8585743');
+        //update_user_meta($user_id, 'billing_phone', '347-8585743');
     }
 
 
