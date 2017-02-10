@@ -126,12 +126,20 @@ class IDER_Callbacks
         // var_dump($request);
         // var_dump($response['body']);
 
-        $tokens = json_decode($response['body']);
+
+        if ($response['response']['code'] != 400) {
+            IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
+            self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
+        }
 
 
         if (is_wp_error($response)) {
-            wp_die($response->error);
+            IDER_Helpers::logRotate('Error: ' . $response->error, 'ider-auth');
+            self::access_denied($response->error);
         }
+
+        $tokens = json_decode($response['body']);
+
 
         $server_url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['user'];
         $request = ['timeout' => 45,
@@ -157,9 +165,15 @@ class IDER_Callbacks
         IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
 
+        if ($response['response']['code'] != 400) {
+            IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
+            self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
+        }
+
+
         if (is_wp_error($response)) {
             IDER_Helpers::logRotate('Error: ' . $response->error, 'ider-auth');
-            wp_die($response->error);
+            self::access_denied($response->error);
         }
 
 
