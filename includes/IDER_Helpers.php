@@ -1,7 +1,7 @@
 <?php
 
 
-class IDer_Helpers
+class IDER_Helpers
 {
 
     static function wp_sso_login_form_button()
