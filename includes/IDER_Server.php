@@ -28,11 +28,14 @@ class IDER_Server
     );
 
     public static $endpoints = array(
-        'url' => 'https://oid.ider.com/core/connect/',
-        'auth' => 'authorize',
-        'token' => 'token',
-        'user' => 'userinfo',
-        'logout' => 'endsession',
+        'url' => 'https://oid.ider.com/core/',
+        'auth' => 'connect/authorize',
+        'token' => 'connect/token',
+        'user' => 'connect/userinfo',
+        'logout' => 'connect/endsession',
+        'validateidtoken' => 'connect/identitytokenvalidation',
+        'validateaccesstoken' => 'connect/accesstokenvalidation',
+        'discovery' => '.well-known/openid-configuration',
         'callback' => 'Callback'
     );
 
