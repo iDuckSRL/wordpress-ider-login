@@ -4,73 +4,63 @@
 class IDER_Callbacks
 {
 
+    static $tokens;
+    static $options;
+    static $discovery;
+
+
     static function getAuthorizationParams()
     {
-        $options = get_option('wposso_options');
 
         return [
-            'client_id' => $options['client_id'],
+            'client_id' => self::$options['client_id'],
             'response_type' => 'code',
-            'scope' => 'openid ' . (self::getOverridingScope() ?: $options['extra_scopes']),
+            'scope' => 'openid ' . (self::_getOverridingScope() ?: self::$options['extra_scopes']),
             'redirect_uri' => site_url(IDER_Server::$endpoints['callback'])
         ];
     }
 
 
-// Authenticate Check and Redirect
+    // Authenticate Check and Redirect
     static function generate_authorization_url()
     {
-        $options = get_option('wposso_options');
+        self::$options = get_option('wposso_options');
 
-        $params = self::getAuthorizationParams();
+        $params = array_merge(
+            self::getAuthorizationParams(),
+            [
+                'state' => md5(self::$options['client_id'] . self::$options['client_secret'] . time())
+            ]
+        );
 
-        $state = md5($options['client_id'] . $options['client_secret'] . time());
-        setcookie('_erdist', $state, time() + 500);
 
-        $params['state'] = $state;
+        $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . http_build_query($params);
+        $nonce = md5($url);
+        $url_nonced = $url . '&nonce=' . $nonce;
 
-        $params = http_build_query($params);
 
-        $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . $params;
-        $url_nonced = $url . '&nonce=' . md5($url);
+        $crypted = self::_sslEncrypt($params['state'] . '.' . $nonce);
+        setcookie('_redi', $crypted, time() + 500);
+        IDER_Helpers::logRotate('Cookie crypt: ' . $crypted, 'ider-auth');
 
-        IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
-        IDER_Helpers::logRotate(str_repeat('-', 64), 'ider-auth');
+
+        IDER_Helpers::logRotate(str_repeat('=-', 64), 'ider-auth');
         IDER_Helpers::logRotate('Call URL: ' . $url_nonced, 'ider-auth');
 
         wp_redirect($url_nonced);
         exit;
     }
 
-// http://www.xgox.net/CallBack?code=6c3d246717f68d526c848376763a343c&state=000303044efcf512f1834342d9298702&session_state=DCGlUH8NDpBqIsCWcO_aGvG0rFhQTmYrnAtwXiyWlF0.e35feb5b595a552aec968487cccde1f7
 
-
-    static function validate_authorization_response()
+    static function validate_authorization_response($state)
     {
         // state must match
-        if ($_COOKIE['_erdist'] != $_GET['state']) {
-            IDER_Helpers::logRotate('State NOT invalid. Halt.', 'ider-auth');
+        if ($state != $_GET['state']) {
+            IDER_Helpers::logRotate('State NOT valid. Halt.', 'ider-auth');
             return false;
         } else {
-            setcookie('_erdist');
+            setcookie('_redi');
             IDER_Helpers::logRotate('State valid. Cookie unset.', 'ider-auth');
-        }
-
-
-        // once must be valid
-        $params = self::getAuthorizationParams();
-        $params['state'] = $_GET['state'];
-
-        $params = http_build_query($params);
-
-        $url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['auth'] . '?' . $params;
-        $nonce = md5($url);
-
-        if ($nonce != $_GET['nonce']) {
-            IDER_Helpers::logRotate('Nonce NOT valid. Halt.', 'ider-auth');
-            //return false;
-        } else {
-            IDER_Helpers::logRotate('Nonce valid', 'ider-auth');
         }
 
         // all good
@@ -78,32 +68,44 @@ class IDER_Callbacks
     }
 
 
-    // Handle the callback from the server if there is one.
-    static function redeem_authorization_code()
+    static function callbackHandler()
     {
-        IDER_Helpers::logRotate('Call URL: ' . $_SERVER['REQUEST_URI'], 'ider-auth');
+        self::$options = get_option('wposso_options');
 
+        self::discovery();
+
+        self::get_token();
+        self::validateToken();
+        self::getUserinfo();
+    }
+
+
+    // Handle the callback from the server if there is one.
+    static function get_token()
+    {
+        IDER_Helpers::logRotate('Called callback URL: ' . site_url($_SERVER['REQUEST_URI']), 'ider-auth');
         IDER_Helpers::logRotate('Redeem Auth code' . str_repeat(' -', 64), 'ider-auth');
 
-        if (!self::validate_authorization_response()) {
-            self::access_denied('Auth response malformed or invalid');
+        $plain = self::_sslDecrypt($_COOKIE['_redi']);
+        list($state, $nonce) = explode(".", $plain);
+
+        //IDER_Helpers::logRotate('Cookie raw: ' . $_COOKIE['_redi'], 'ider-auth');
+        //IDER_Helpers::logRotate('Cookie decrypt: ' . $plain, 'ider-auth');
+
+        if (!self::validate_authorization_response($state)) {
+            self::access_denied('State not valid');
         }
-
-        $options = get_option('wposso_options');
-
-        // Grab a copy of the options and set the redirect location.
-        $welcome_page = $options['redirect_to_dashboard'] == '1' ? $options['welcome_page'] : site_url();
-
 
         $code = sanitize_text_field($_GET['code']);
         $server_url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['token'];
-        $request = ['method' => 'POST',
+        $request = [
+            'method' => 'POST',
             'timeout' => 45,
             'redirection' => 5,
             'httpversion' => '1.0',
             'blocking' => true,
             'headers' => [
-                'Authorization' => 'basic ' . base64_encode($options['client_id'] . ":" . $options['client_secret'])
+                'Authorization' => 'basic ' . base64_encode(self::$options['client_id'] . ":" . self::$options['client_secret'])
             ],
             'body' => array(
                 'grant_type' => 'authorization_code',
@@ -127,7 +129,7 @@ class IDER_Callbacks
         // var_dump($response['body']);
 
 
-        if ($response['response']['code'] != 400) {
+        if ($response['response']['code'] != 200) {
             IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
             self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
         }
@@ -138,16 +140,93 @@ class IDER_Callbacks
             self::access_denied($response->error);
         }
 
-        $tokens = json_decode($response['body']);
+        self::$tokens = json_decode($response['body']);
+
+
+    }
+
+    static function discovery()
+    {
+        // verify access_token
+        $server_url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['discovery'];
+
+        IDER_Helpers::logRotate('Discovery' . str_repeat(' -', 64), 'ider-auth');
+
+        IDER_Helpers::logRotate('Call curl URL: ' . $server_url, 'ider-auth');
+
+        $response = wp_remote_get($server_url);
+
+        if ($response['response']['code'] != 200) {
+            IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
+            self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
+        }
+
+        self::$discovery = json_decode($response['body']);
+
+        unset($response['http_response']);
+        IDER_Helpers::logRotate('Discovery: ' . print_r(self::$discovery, 1), 'ider-auth');
+    }
+
+
+    static function validateToken()
+    {
+        // verify access_token
+        $server_url =
+            IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['validateaccesstoken'] .
+            '?token=' . self::$tokens->access_token;
+
+        IDER_Helpers::logRotate('Validate access token' . str_repeat(' -', 64), 'ider-auth');
+
+        IDER_Helpers::logRotate('Call curl URL: ' . $server_url, 'ider-auth');
+
+        $response = wp_remote_get($server_url);
+
+        if ($response['response']['code'] != 200) {
+            IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
+            self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
+        }
+
+
+        unset($response['http_response']);
+        IDER_Helpers::logRotate('Access token data: ' . print_r(json_decode($response['body']), 1), 'ider-auth');
+
+
+
+        // verify id token
+
+        $server_url =
+            IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['validateidtoken'] .
+            '?token=' . self::$tokens->id_token .
+            '&client_id=' . self::$options['client_id'];
+
+        IDER_Helpers::logRotate('Validate id token' . str_repeat(' -', 64), 'ider-auth');
+
+        IDER_Helpers::logRotate('Call curl URL: ' . $server_url, 'ider-auth');
+
+        $response = wp_remote_get($server_url);
+
+        unset($response['http_response']);
+        IDER_Helpers::logRotate('Id token data: ' . print_r(json_decode($response['body']), 1), 'ider-auth');
+        // TODO: check nonce + altre verifiche
+
+
+    }
+
+
+    static function getUserinfo()
+    {
+
+        $welcome_page = self::$options['redirect_to_dashboard'] == '1' ? self::$options['welcome_page'] : site_url();
 
 
         $server_url = IDER_Server::$endpoints['url'] . IDER_Server::$endpoints['user'];
-        $request = ['timeout' => 45,
+        $request = [
+            'timeout' => 45,
             'redirection' => 5,
             'httpversion' => '1.0',
             'blocking' => true,
             'headers' => [
-                'Authorization' => 'Bearer ' . $tokens->access_token
+                'Authorization' => 'Bearer ' . self::$tokens->access_token
             ],
             'sslverify' => false
         ];
@@ -165,7 +244,7 @@ class IDER_Callbacks
         IDER_Helpers::logRotate('Response: ' . print_r($response, 1), 'ider-auth');
 
 
-        if ($response['response']['code'] != 400) {
+        if ($response['response']['code'] != 200) {
             IDER_Helpers::logRotate('Error: ' . $response['response']['code'] . '-' . $response['response']['message'], 'ider-auth');
             self::access_denied($response['response']['code'] . '-' . $response['response']['message']);
         }
@@ -181,7 +260,7 @@ class IDER_Callbacks
 
         IDER_Helpers::logRotate('Ider returned user data: ' . print_r($user_info, 1), 'ider-auth');
 
-        $user_info = (object)self::fieldsMap((array)$user_info);
+        $user_info = (object)self::_fieldsMap((array)$user_info);
 
         // check if user exists
         $users = get_users(array('meta_key' => 'ider_sub', 'meta_value' => $user_info->sub));
@@ -192,11 +271,9 @@ class IDER_Callbacks
             $user_id = self::_do_register($user_info);
 
             $user = get_user_by('id', $user_id);
-
-            $newuser = true;
         }
 
-        update_user_meta($user->ID, 'ider_token', $tokens);
+        update_user_meta($user->ID, 'ider_token', self::$tokens);
 
         // Log the User In
         self::_login($user);
@@ -228,7 +305,6 @@ class IDER_Callbacks
         update_user_meta($user_id, 'billing_postcode', '10100');
         update_user_meta($user_id, 'billing_city', 'Torino');
         update_user_meta($user_id, 'billing_state', 'TO');
-        //update_user_meta($user_id, 'billing_phone', '347-8585743');
     }
 
 
@@ -285,7 +361,7 @@ class IDER_Callbacks
     }
 
 
-    public static function fieldsMap($userdata)
+    private static function _fieldsMap($userdata)
     {
         $fields = array();
 
@@ -302,7 +378,7 @@ class IDER_Callbacks
     }
 
 
-    public static function getOverridingScope()
+    private static function _getOverridingScope()
     {
         global $wp_query;
 
@@ -311,6 +387,30 @@ class IDER_Callbacks
         }
 
         return false;
+    }
+
+
+    private static function _sslEncrypt($plain)
+    {
+        $key = substr(sha1(self::$options['client_secret'], true), 0, 16);
+        $iv = openssl_random_pseudo_bytes(16);
+
+        $crypted = openssl_encrypt($plain, 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+
+        return base64_encode($iv . $crypted);
+    }
+
+
+    private static function _sslDecrypt($crypted)
+    {
+        $crypted = base64_decode($crypted);
+
+        $key = substr(sha1(self::$options['client_secret'], true), 0, 16);
+        $iv = substr($crypted, 0, 16);
+
+        $plain = openssl_decrypt(substr($crypted, strlen($iv)), 'AES-128-CBC', $key, OPENSSL_RAW_DATA, $iv);
+
+        return $plain;
     }
 
 
