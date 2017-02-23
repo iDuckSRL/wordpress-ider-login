@@ -24,7 +24,7 @@ class IDER_Rewrites
     }
 
 
-    function create_rewrite_rules($rules)
+    static function create_rewrite_rules($rules)
     {
         global $wp_rewrite;
         $newRule1 = array('auth/(.+)' => 'index.php?auth=' . $wp_rewrite->preg_index(1));
@@ -34,7 +34,7 @@ class IDER_Rewrites
     }
 
 
-    function add_query_vars($qvars)
+    static function add_query_vars($qvars)
     {
         $qvars[] = 'auth';
         $qvars[] = 'scope';
@@ -42,14 +42,14 @@ class IDER_Rewrites
     }
 
 
-    function flush_rewrite_rules()
+    static function flush_rewrite_rules()
     {
         global $wp_rewrite;
         $wp_rewrite->flush_rules();
     }
 
 
-    function template_redirect_intercept()
+    static function template_redirect_intercept()
     {
 
         global $wp_query;
@@ -66,7 +66,7 @@ class IDER_Rewrites
         }
 
         if (strtolower(IDER_Server::$endpoints['callback']) == $wp_query->get('name') && !empty($_GET['code'])) {
-            IDER_Callbacks::redeem_authorization_code();
+            IDER_Callbacks::callbackHandler();
             exit;
         }
 
