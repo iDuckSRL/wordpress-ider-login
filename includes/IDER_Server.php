@@ -56,6 +56,7 @@ class IDER_Server
         $options = get_option('wposso_options');
         if ($options['login_form_button'] == 1) {
             add_action('login_form', [IDER_Helpers, 'wp_sso_login_form_button']);
+            add_action('woocommerce_login_form_end', [IDER_Helpers, 'wp_sso_login_form_button']);
         }
 
         self::register_activation_hooks();
