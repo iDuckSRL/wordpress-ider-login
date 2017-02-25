@@ -1,0 +1,15 @@
+{
+  "name": "ider/wp-ider-login-client",
+  "description": "IDER Login - Wordpress Plugin",
+  "keywords": [
+    "framework",
+    "ider",
+    "php",
+    "wordpress"
+  ],
+  "type": "project",
+  "minimum-stability": "dev",
+  "require": {
+    "dannoso/ider-openid-client-php": "dev-master"
+  }
+}

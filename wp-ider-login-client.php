@@ -2,8 +2,8 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://oid.ider.com/core
- * Version: 0.3.0
- * Description: Provides Single Sign On integration with IDer Identity Server using OAuth2 specs.
+ * Version: 0.8.0
+ * Description: Provides Single Sign On integration with IDer Identity Server using OpenID specs.
  * Author: Davide Lattanzio
  * Author URI: https://oid.ider.com/core
  * License: GPL2
@@ -16,6 +16,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of.
  */
+
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -32,7 +33,7 @@ if (!defined('IDER_PLUGIN_URL')) {
 }
 
 if (!defined('IDER_CLIENT_VERSION')) {
-    define('IDER_CLIENT_VERSION', '0.2.0');
+    define('IDER_CLIENT_VERSION', '0.8.0');
 }
 
 if (!defined('IDER_SITE_DOMAIN')) {
@@ -43,6 +44,7 @@ if (!defined('IDER_SITE_DOMAIN')) {
 add_filter('widget_text','do_shortcode');
 
 // require the main lib
+require_once IDER_PLUGIN_DIR . '/vendor/autoload.php';
 require_once IDER_PLUGIN_DIR . '/includes/IDER_Server.php';
 
 // bootstrap the plugin

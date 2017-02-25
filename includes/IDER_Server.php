@@ -11,11 +11,11 @@ defined('ABSPATH') or die('No script kiddies please!');
 class IDER_Server
 {
 
-    /** Version */
-    public $version = "1.1";
-
     /** Server Instance */
     public static $_instance = null;
+
+    /** Options */
+    public static $options = null;
 
     /** Default Settings */
     protected static $default_settings = array(
@@ -25,18 +25,6 @@ class IDER_Server
         'redirect_to_dashboard' => true,
         'login_form_button' => true,
         'welcome_page' => 'my-account/ider-profile'
-    );
-
-    public static $endpoints = array(
-        'url' => 'https://oid.ider.com/core/',
-        'auth' => 'connect/authorize',
-        'token' => 'connect/token',
-        'user' => 'connect/userinfo',
-        'logout' => 'connect/endsession',
-        'validateidtoken' => 'connect/identitytokenvalidation',
-        'validateaccesstoken' => 'connect/accesstokenvalidation',
-        'discovery' => '.well-known/openid-configuration',
-        'callback' => 'Callback'
     );
 
 
@@ -53,8 +41,7 @@ class IDER_Server
         //add_action("init", array(__CLASS__, "includes"));
 
         // add IDER login button to WP login form
-        $options = get_option('wposso_options');
-        if ($options['login_form_button'] == 1) {
+        if (self::get_option('login_form_button') == 1) {
             add_action('login_form', [IDER_Helpers, 'wp_sso_login_form_button']);
             add_action('woocommerce_login_form_end', [IDER_Helpers, 'wp_sso_login_form_button']);
         }
@@ -64,6 +51,62 @@ class IDER_Server
 
     }
 
+    // Options lazy load
+    static function get_option($option = null)
+    {
+        self::$options = get_option('wposso_options');;
+
+        if ($option === null) {
+            return self::$options;
+        } else if (array_key_exists($option, self::$options)) {
+            return self::$options[$option];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     *  IDEROpenIDClient Initializer
+     */
+    public static function getIDerOpenIdClientIstance()
+    {
+        \IDERConnect\IDEROpenIDClient::$IDERLogFile = IDER_PLUGIN_DIR . '/log/ider-connect.log';
+
+        $options = get_option('wposso_options');
+
+        if (is_null(\IDERConnect\IDEROpenIDClient::$_instance)) {
+            \IDERConnect\IDEROpenIDClient::$_instance = new \IDERConnect\IDEROpenIDClient($options['client_id'], $options['client_secret'], $options['extra_scopes']);
+
+        }
+
+        return \IDERConnect\IDEROpenIDClient::$_instance;
+    }
+
+
+    public static function IDerOpenIdClientHandler()
+    {
+        global $wp_query;
+
+
+        try {
+            $iderconnect = IDER_Server::getIDerOpenIdClientIstance();
+
+            if (!empty($wp_query->get('scope'))) {
+                $iderconnect->setScope($wp_query->get('scope'));
+            }
+
+            $iderconnect->authenticate();
+
+            $userInfo = $iderconnect->requestUserInfo();
+            IDER_UserManager::userinfo_handler($userInfo);
+            exit;
+
+        } catch (Exception $e) {
+            IDER_UserManager::access_denied($e->getMessage());
+        } finally {
+            exit;
+        }
+    }
 
     /**
      * Plugin Initializer

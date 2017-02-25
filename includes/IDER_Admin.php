@@ -73,16 +73,16 @@ class IDER_Admin
         ?>
         <div class="wrap">
             <h2>IDer Single Sign On Configuration</h2>
-            <p>This plugin is meant to be used with <a href="https://oid.ider.com/core">IDer Identity Server</a>.
+            <p>This plugin is meant to be used with <a href="https://www.ider.com/">IDer Connect System</a>.
             </p>
             <div>
                 <strong>Setting up IDer Client Account</strong>
                 <ol>
                     <li>Create a new client and set the Redirect URI (aka callback URL) to:
-                        <strong><?php echo site_url(IDER_Server::$endpoints['callback']); ?></strong></li>
+                        <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
-                    <li>Set the campaign id to retrieve the user data you chosen.</li>
-                    <li>If you need it set the offline QR campaign as <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter admin page</li>
+                    <li>Set the campaign id to retrieve the user data you chose.</li>
+                    <li>If you need it, set the offline QR campaign as <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter admin page</li>
                 </ol>
             </div>
             <form method="post" action="options.php">

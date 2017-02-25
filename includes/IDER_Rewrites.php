@@ -5,7 +5,11 @@
  * @author Justin Greer <justin@justin-greer.com
  * @package WP Single Sign On Client
  */
+
 defined('ABSPATH') or die('No script kiddies please!');
+
+
+use IDERConnect\IDEROpenIDClient;
 
 /**
  * Class WPOSSO_Rewrites
@@ -49,31 +53,21 @@ class IDER_Rewrites
     }
 
 
+    /**
+     *
+     */
     static function template_redirect_intercept()
     {
-
         global $wp_query;
-        //var_dump($_GET['code']);exit;
 
-        if (is_user_logged_in()) {
-           // wp_redirect(home_url());
-           // exit;
+        // echo $wp_query->get('auth'); exit;
+
+
+        // if auth code or callback: pass the control to library
+        if ('ider' == $wp_query->get('auth') or $wp_query->get('name') == IDEROpenIDClient::$IDERRedirectURL) {
+           IDER_Server::IDerOpenIdClientHandler();
         }
 
-        if ('ider' == $wp_query->get('auth')) {
-            IDER_Callbacks::generate_authorization_url();
-            exit;
-        }
-
-        if (strtolower(IDER_Server::$endpoints['callback']) == $wp_query->get('name') && !empty($_GET['code'])) {
-            IDER_Callbacks::callbackHandler();
-            exit;
-        }
-
-        if (strtolower(IDER_Server::$endpoints['callback']) == $wp_query->get('name') && !empty($_REQUEST['error'])) {
-            IDER_Callbacks::access_denied($_REQUEST['error']);
-            exit;
-        }
 
     }
 }
