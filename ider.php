@@ -2,7 +2,7 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://oid.ider.com/core
- * Version: 0.1.0
+ * Version: 0.3.0
  * Description: Provides Single Sign On integration with IDer Identity Server using OAuth2 specs.
  * Author: Davide Lattanzio
  * Author URI: https://oid.ider.com/core
