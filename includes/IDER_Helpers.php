@@ -31,7 +31,7 @@ class IDER_Helpers
 
         if (!file_exists($filename . $ext)) {
             touch($filename . $ext);
-            chmod($filename . $ext, 0666);
+            chmod($filename . $ext, 0755);
         }
 
         // 2 mb
@@ -46,7 +46,7 @@ class IDER_Helpers
             rename($filename . $ext, $filename . '.' . $n . $ext);
 
             touch($filename . $ext);
-            chmod($filename . $ext, 0666);
+            chmod($filename . $ext, 0755);
         }
 
 

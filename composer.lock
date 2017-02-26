@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6a0fe16b68798dbe254b802d6f6de322",
-    "content-hash": "1d9d15e95d98d9a8e9bf543cb6f758ac",
+    "hash": "ed601fed77064497a8bfb8d1b02e832e",
+    "content-hash": "f8e07fd52950823456482d6283ddbb3b",
     "packages": [
         {
-            "name": "dannoso/ider-openid-client-php",
+            "name": "jlmsrl/ider-openid-client-php",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dannoso/ider-openid-client-php.git",
-                "reference": "f57bd0a0c09ed91bd88d61dc76517071407dbf9d"
+                "url": "https://github.com/JLMsrl/ider-openid-client-php.git",
+                "reference": "fcd797e86bf671bf92c9089cca4dfe017423a06e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dannoso/ider-openid-client-php/zipball/f57bd0a0c09ed91bd88d61dc76517071407dbf9d",
-                "reference": "f57bd0a0c09ed91bd88d61dc76517071407dbf9d",
+                "url": "https://api.github.com/repos/JLMsrl/ider-openid-client-php/zipball/fcd797e86bf671bf92c9089cca4dfe017423a06e",
+                "reference": "fcd797e86bf671bf92c9089cca4dfe017423a06e",
                 "shasum": ""
             },
             "require": {
@@ -37,12 +37,12 @@
             "authors": [
                 {
                     "name": "Davide Lattanzio",
-                    "email": "davide.lattanzio@ider.com",
-                    "homepage": "http://ider.com"
+                    "email": "davide.lattanzio@jlm.srl",
+                    "homepage": "https://ider.com"
                 }
             ],
             "description": "IDER OpenID Generic Client for PHP",
-            "time": "2017-02-19 18:06:59"
+            "time": "2017-02-25 18:10:10"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -138,7 +138,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "dannoso/ider-openid-client-php": 20
+        "jlmsrl/ider-openid-client-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

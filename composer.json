@@ -5,11 +5,12 @@
     "framework",
     "ider",
     "php",
-    "wordpress"
+    "wordpress",
+    "openid"
   ],
   "type": "project",
   "minimum-stability": "dev",
   "require": {
-    "dannoso/ider-openid-client-php": "dev-master"
+    "jlmsrl/ider-openid-client-php": "dev-master"
   }
 }
