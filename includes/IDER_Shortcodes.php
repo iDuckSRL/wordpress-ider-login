@@ -53,7 +53,7 @@ class IDER_Shortcodes
             if ($usermetas[$localfield]) {
                 $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>' . $usermetas[$localfield][0] . '</td></tr>';
             } else {
-                //$tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>--</td></tr>';
+                $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>--</td></tr>';
             }
         }
 

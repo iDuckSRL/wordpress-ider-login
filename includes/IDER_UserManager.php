@@ -83,10 +83,12 @@ class IDER_UserManager
 
 
         // TMP: filling missing fields
+        /*
         update_user_meta($user_id, 'billing_address_1', 'Via Roma 10');
         update_user_meta($user_id, 'billing_postcode', '10100');
         update_user_meta($user_id, 'billing_city', 'Torino');
         update_user_meta($user_id, 'billing_state', 'TO');
+        */
     }
 
 
