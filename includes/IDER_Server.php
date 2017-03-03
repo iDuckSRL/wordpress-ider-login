@@ -76,7 +76,6 @@ class IDER_Server
 
         if (is_null(\IDERConnect\IDEROpenIDClient::$_instance)) {
             \IDERConnect\IDEROpenIDClient::$_instance = new \IDERConnect\IDEROpenIDClient($options['client_id'], $options['client_secret'], $options['extra_scopes']);
-
         }
 
         return \IDERConnect\IDEROpenIDClient::$_instance;

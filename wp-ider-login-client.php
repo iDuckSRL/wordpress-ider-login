@@ -57,33 +57,39 @@ add_filter('ider_fields_map', function($fields){
     $fields['ider_sub'] = 'sub';
     $fields['first_name'] = 'given_name';
     $fields['last_name'] = 'family_name';
+    $fields['nickname'] = 'nickname';
     $fields['email'] = 'email';
-    $fields['url'] = '';
-    $fields['description'] = '';
+    $fields['display_name'] = 'preferred_user_name';
+    $fields['url'] = 'website';
+    $fields['description'] = 'note';
 
+    $fields['billing_address_1'] = 'address_company_street_address';
+    $fields['billing_address_2'] = '';
+    $fields['billing_city'] = 'address_company_locality';
+    $fields['billing_state'] = 'address_company_region';
+    $fields['billing_postcode'] = 'address_company_postal_code';
+    $fields['billing_country'] = 'address_company_country';
+
+    $fields['shipping_address_1'] = 'address_shipping_street_address';
+    $fields['shipping_address_2'] = '';
+    $fields['shipping_city'] = 'address_shipping_locality';
+    $fields['shipping_state'] = 'address_shipping_region';
+    $fields['shipping_postcode'] = 'address_shipping_postal_code';
+    $fields['shipping_country'] = 'address_shipping_country';
+
+    // tmp
     $fields['billing_first_name'] = 'given_name';
     $fields['billing_last_name'] = 'family_name';
-    $fields['billing_company'] = '';
-    $fields['billing_address_1'] = 'residential_address';
-    $fields['billing_address_2'] = '';
-    $fields['billing_city'] = '';
-    $fields['billing_postcode'] = 'residential_zipcode';
-    $fields['billing_country'] = 'address_country';
-    $fields['billing_state'] = '';
-    $fields['billing_phone'] = 'phone_number';
-    $fields['billing_email'] = 'email';
+    $fields['billing_company'] = 'company_name';
+    $fields['billing_phone'] = '';
+    $fields['billing_email'] = 'company_email';
 
     $fields['shipping_first_name'] = 'given_name';
     $fields['shipping_last_name'] = 'family_name';
     $fields['shipping_company'] = '';
-    $fields['shipping_address_1'] = 'delivery_address';
-    $fields['shipping_address_2'] = '';
-    $fields['shipping_city'] = '';
-    $fields['shipping_postcode'] = 'delivery_zipcode';
-    $fields['shipping_country'] = 'address_country';
-    $fields['shipping_state'] = '';
     $fields['shipping_phone'] = 'phone_number';
     $fields['shipping_email'] = 'email';
+    // --
 
     return $fields;
 });

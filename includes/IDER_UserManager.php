@@ -7,8 +7,16 @@ class IDER_UserManager
 
     static function userinfo_handler($user_info)
     {
+        $user_info = (array)$user_info;
 
-        $user_info = (object)self::_fieldsMap((array)$user_info);
+        // explode json packed claims
+        $user_info = self::_checkJsonfields($user_info);
+
+        // remap openID fields into local fields
+        $user_info = self::_fieldsMap($user_info);
+
+        $user_info = (object)$user_info;
+
 
         // check if user exists
         $users = get_users(array('meta_key' => 'ider_sub', 'meta_value' => $user_info->sub));
@@ -40,6 +48,7 @@ class IDER_UserManager
 
     static function access_denied($errormsg)
     {
+
         wp_enqueue_style('ider-css', IDER_PLUGIN_URL . 'assets/css/general.css', false, IDER_CLIENT_VERSION, 'all');
 
         $error_msg = sanitize_text_field($errormsg);
@@ -130,5 +139,25 @@ class IDER_UserManager
 
         return $userdata;
     }
+
+
+    private static function _checkJsonfields($userdata)
+    {
+
+        foreach ($userdata as $key => $claim) {
+            if (IDER_Helpers::isJSON($claim)) {
+                $subclaims = json_decode($claim);
+
+                foreach ($subclaims as $subkey => $subclaim) {
+                    $userdata[$key . '_' . $subkey] = $subclaim;
+                }
+
+                unset($userdata[$key]);
+            }
+        }
+
+        return $userdata;
+    }
+
 
 }
