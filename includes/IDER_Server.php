@@ -135,6 +135,10 @@ class IDER_Server
      */
     public static function includes()
     {
+        //  This should be used only when composer autoload fails to include classes
+        //  self::loadPackage(IDER_PLUGIN_DIR.'vendor/phpseclib/phpseclib');
+        //  self::loadPackage(IDER_PLUGIN_DIR.'vendor/jlmsrl/ider-openid-client-php');
+
         IDER_Widget::init();
         IDER_Admin::init();
         IDER_Widget::init();
@@ -175,6 +179,26 @@ class IDER_Server
             }
 
         return false;
+    }
+
+
+    private static function loadPackage($dir)
+    {
+        $composer = json_decode(file_get_contents("$dir/composer.json"), 1);
+        $namespaces = $composer['autoload']['psr-4'];
+
+        // Foreach namespace specified in the composer, load the given classes
+        foreach ($namespaces as $namespace => $classpath) {
+            spl_autoload_register(function ($classname) use ($namespace, $classpath, $dir) {
+                // Check if the namespace matches the class we are looking for
+                if (preg_match("#^" . preg_quote($namespace) . "#", $classname)) {
+                    // Remove the namespace from the file path since it's psr4
+                    $classname = str_replace($namespace, "", $classname);
+                    $filename = preg_replace("#\\\\#", "/", $classname) . ".php";
+                    include_once $dir . "/" . $classpath . "/$filename";
+                }
+            });
+        }
     }
 
 }
