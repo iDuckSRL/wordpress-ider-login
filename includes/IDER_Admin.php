@@ -100,7 +100,7 @@ class IDER_Admin
                     <tr valign="top">
                         <th scope="row">Client Secret</th>
                         <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[client_secret]" min="10"
+                            <input type="password" name="<?php echo $this->option_name ?>[client_secret]" min="10"
                                    value="<?php echo $options["client_secret"]; ?>"/>
                         </td>
                     </tr>
