@@ -47,6 +47,9 @@ add_filter('widget_text','do_shortcode');
 require_once IDER_PLUGIN_DIR . '/vendor/autoload.php';
 require_once IDER_PLUGIN_DIR . '/includes/IDER_Server.php';
 
+// QA environment
+\IDERConnect\IDEROpenIDClient::$IDERServer = 'https://qaoid.ider.com/core';
+
 // bootstrap the plugin
 IDER_Server::instance();
 
