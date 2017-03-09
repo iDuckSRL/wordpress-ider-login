@@ -80,9 +80,9 @@ add_filter('ider_fields_map', function($fields){
     // tmp
     $fields['billing_first_name'] = 'given_name';
     $fields['billing_last_name'] = 'family_name';
-    $fields['billing_company'] = 'company_name';
-    $fields['billing_phone'] = '';
-    $fields['billing_email'] = 'company_email';
+    $fields['billing_company'] = '';
+    $fields['billing_phone'] = 'phone_number';
+    $fields['billing_email'] = 'email';
 
     $fields['shipping_first_name'] = 'given_name';
     $fields['shipping_last_name'] = 'family_name';
