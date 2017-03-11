@@ -7,6 +7,8 @@ class IDER_UserManager
 
     static function userinfo_handler($user_info)
     {
+        // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
+
         $user_info = (array)$user_info;
 
         // explode json packed claims
@@ -17,10 +19,14 @@ class IDER_UserManager
 
         $user_info = (object)$user_info;
 
+        // check if user exists by email
+        // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
+        $user = get_user_by('email', $user_info->email);
 
-        // check if user exists
-        $users = get_users(array('meta_key' => 'ider_sub', 'meta_value' => $user_info->sub));
-        $user = $users[0];
+        // check if user exists by sub
+        if (!$user->ID) {
+            $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
+        }
 
         // if new, register first
         if (!$user->ID) {
@@ -29,8 +35,6 @@ class IDER_UserManager
             $user = get_user_by('id', $user_id);
         }
 
-        // update_user_meta($user->ID, 'ider_token', self::$tokens);
-
         // Log the User In
         self::_login($user);
         do_action('wp_login', $user_info->email);
@@ -38,16 +42,20 @@ class IDER_UserManager
         // update user data
         self::_update_usermeta($user->ID, $user_info);
 
-
         if (is_user_logged_in()) {
             wp_redirect(IDER_Server::get_option('welcome_page'));
             exit;
         }
+
+        IDER_UserManager::access_denied("User unable to login.");
     }
 
 
-    static function access_denied($errormsg)
+    static function access_denied($errormsg, $mainmsg = null)
     {
+        if (is_null($mainmsg)) {
+            $mainmsg = "Error authenticating user";
+        }
 
         wp_enqueue_style('ider-css', IDER_PLUGIN_URL . 'assets/css/general.css', false, IDER_CLIENT_VERSION, 'all');
 
@@ -57,7 +65,7 @@ class IDER_UserManager
         echo '<div class="row">';
         echo '<div class="col-md-12 col-sm-18">';
         echo '<header class="page-header">';
-        echo '<h1 class="page-title">Error authenticating user</h1>';
+        echo '<h1 class="page-title">' . $mainmsg . '</h1>';
         echo '</header>';
         echo '<div class="errordiv">';
         echo '<p>Please try later.</p>';
@@ -74,13 +82,22 @@ class IDER_UserManager
 
     private static function _update_usermeta($user_id, $userdata)
     {
+        $updated = [];
+
         foreach ($userdata as $key => $data) {
             // TMP: override wrong format
-            if (in_array($key, array('billing_country', 'shipping_country'))) $data = 'IT';
+            // if (in_array($key, array('billing_country', 'shipping_country'))) $data = 'IT';
 
-            update_user_meta($user_id, $key, $data);
+            $metadata = get_user_meta($user_id, $key, true);
+
+            if ($metadata != $data) {
+                update_user_meta($user_id, $key, $data);
+
+                // mask as updated
+                $updated[] = $key;
+            }
         }
-
+        update_user_meta($user_id, 'last_updated_fields', $updated);
 
         // TMP: filling missing fields
         /*
@@ -89,6 +106,8 @@ class IDER_UserManager
         update_user_meta($user_id, 'billing_city', 'Torino');
         update_user_meta($user_id, 'billing_state', 'TO');
         */
+
+        return $updated;
     }
 
 
@@ -150,10 +169,12 @@ class IDER_UserManager
             if (IDER_Helpers::isJSON($claim)) {
                 $subclaims = json_decode($claim);
 
+                // break down the claim
                 foreach ($subclaims as $subkey => $subclaim) {
                     $userdata[$key . '_' . $subkey] = $subclaim;
                 }
 
+                // delete the original claim
                 unset($userdata[$key]);
             }
         }

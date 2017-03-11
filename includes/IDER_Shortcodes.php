@@ -35,32 +35,42 @@ class IDER_Shortcodes
     static function ider_profile_summary()
     {
 
+        $user = get_user_by('id', get_current_user_id());
+
         $usermetas = get_user_meta(get_current_user_id());
 
-        // print_r($usermetas);
+        $updated_fields = get_user_meta(get_current_user_id(), 'last_updated_fields', true);
 
-        $fields = ['user_login' => '', 'nickname' => ''];
+        //print_r($user->user_email);
+
+        $fields = [];
         $fields = array_keys(apply_filters('ider_fields_map', $fields));
 
-        //print_r($fields);
+        //print_r($usermetas);
 
         $tbody = '';
         foreach ($fields as $localfield) {
 
             // skip shipping fields
-            if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
+            //if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
 
+            $tbody .= '<tr class="' . (in_array($localfield, $updated_fields) ? 'warning' : '') . '"><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>';
             if ($usermetas[$localfield]) {
-                $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>' . $usermetas[$localfield][0] . '</td></tr>';
+                $tbody .= $usermetas[$localfield][0];
             } else {
-                $tbody .= '<tr><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>--</td></tr>';
+                $tbody .= '--';
             }
+            $tbody .= '</td></tr>';
         }
 
+        $email_mismatch = '<div class="alert alert-warning">
+                           <strong>Warning!</strong> Your local email (' . $user->user_email . ') is different than your IDer email (' . ($usermetas['email'][0] ?: 'none') . ').
+                           </div>';
 
         $table = '<h3>Welcome ' . $usermetas['first_name'][0] . ' ' . $usermetas['last_name'][0] . '</h3>';
         $table .= '<h4>You have been authenticated via IDer<sup>&copy;</sup> system.</h4>';
-        $table .= '<table class="form-table">';
+        $table .= $usermetas['email'][0] == $user->user_email ? '' : $email_mismatch;
+        $table .= '<table class="table table-condensed">';
         $table .= '<tbody>' . $tbody . '</tbody>';
         $table .= '</table>';
 
