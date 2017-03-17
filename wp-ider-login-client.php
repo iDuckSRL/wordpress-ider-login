@@ -55,7 +55,7 @@ IDER_Server::instance();
 
 
 /* If you need customization (ie: field map) you can write below */
-add_filter('ider_fields_map', function($fields){
+add_filter('ider_fields_map', function ($fields) {
 
     $fields['ider_sub'] = 'sub';
     $fields['first_name'] = 'given_name';
@@ -96,6 +96,20 @@ add_filter('ider_fields_map', function($fields){
 
     return $fields;
 });
+
+
+// If you need custom data handler you can hook here. $handler = true will prevent the default action
+add_filter('callback_handler', function ($user_info) {
+
+    if (in_array('yourscope', $_SESSION['openid_connect_scope'])) {
+        // do something...
+
+        // true will prevent further processing
+        return true;
+    }
+
+});
+
 
 
 
