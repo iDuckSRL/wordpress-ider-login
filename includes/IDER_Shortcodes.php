@@ -12,6 +12,12 @@ class IDER_Shortcodes
 
 
 
+    static function ider_login_button_render($atts = []){
+
+        echo self::ider_login_button($atts);
+
+    }
+
     static function ider_login_button($atts = [])
     {
         $a = shortcode_atts(array(

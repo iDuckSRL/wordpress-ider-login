@@ -42,8 +42,8 @@ class IDER_Server
 
         // add IDER login button to WP login form
         if (self::get_option('login_form_button') == 1) {
-            add_action('login_form', [IDER_Shortcodes, 'ider_login_button']);
-            add_action('woocommerce_login_form_end', [IDER_Shortcodes, 'ider_login_button']);
+            add_action('login_form', [IDER_Shortcodes, 'ider_login_button_render']);
+            add_action('woocommerce_login_form_end', [IDER_Shortcodes, 'ider_login_button_render']);
         }
 
         self::register_activation_hooks();
@@ -97,7 +97,17 @@ class IDER_Server
             $iderconnect->authenticate();
 
             $userInfo = $iderconnect->requestUserInfo();
-            IDER_UserManager::userinfo_handler($userInfo);
+
+
+            $handled = false;
+            // pass the controll to user defined functions
+            $handled = apply_filters('callback_handler', $userInfo);
+
+            // if user function hadn't been exclusive let's resume the standard flow
+            if (!$handled) {
+                IDER_UserManager::userinfo_handler($userInfo);
+            }
+
             exit;
 
         } catch (Exception $e) {
@@ -140,10 +150,10 @@ class IDER_Server
         //  self::loadPackage(IDER_PLUGIN_DIR.'vendor/jlmsrl/ider-openid-client-php');
 
         IDER_Widget::init();
+        IDER_Shortcodes::init();
         IDER_Admin::init();
         IDER_Widget::init();
         IDER_Rewrites::init();
-        IDER_Shortcodes::init();
         IDER_WooPage::init();
 
     }
