@@ -9,15 +9,7 @@ class IDER_UserManager
     {
         // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
 
-        $user_info = (array)$user_info;
-
-        // explode json packed claims
-        $user_info = self::_checkJsonfields($user_info);
-
-        // remap openID fields into local fields
-        $user_info = self::_fieldsMap($user_info);
-
-        $user_info = (object)$user_info;
+        $user_info = self::userInfoNormalize($user_info);
 
         // check if user exists by email
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
@@ -48,6 +40,22 @@ class IDER_UserManager
         }
 
         IDER_UserManager::access_denied("User unable to login.");
+    }
+
+
+    static function userInfoNormalize($user_info)
+    {
+        $user_info = (array)$user_info;
+
+        // explode json packed claims
+        $user_info = self::_checkJsonfields($user_info);
+
+        // remap openID fields into local fields
+        $user_info = self::_fieldsMap($user_info);
+
+        $user_info = (object)$user_info;
+
+        return $user_info;
     }
 
 
