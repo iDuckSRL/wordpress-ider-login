@@ -4,20 +4,6 @@
 class IDER_Helpers
 {
 
-    static function wp_sso_login_form_button()
-    {
-
-        ?>
-        <a style="color:#FFF; width:100%; text-align:center; margin-bottom:1em;"
-           class="button button-primary button-large"
-           href="<?php echo site_url('?auth=ider'); ?>">
-            <img src="<?php echo IDER_PLUGIN_URL ?>assets/images/logo_ider.png"
-                 style="display: inline; vertical-align: sub;margin-right: 5px">
-            Login with IDer</a>
-        <div style="clear:both;"></div>
-        <?php
-    }
-
 
     static function logRotate($text, $filename, $ext = 'log')
     {

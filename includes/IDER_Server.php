@@ -42,8 +42,8 @@ class IDER_Server
 
         // add IDER login button to WP login form
         if (self::get_option('login_form_button') == 1) {
-            add_action('login_form', [IDER_Helpers, 'wp_sso_login_form_button']);
-            add_action('woocommerce_login_form_end', [IDER_Helpers, 'wp_sso_login_form_button']);
+            add_action('login_form', [IDER_Shortcodes, 'ider_login_button']);
+            add_action('woocommerce_login_form_end', [IDER_Shortcodes, 'ider_login_button']);
         }
 
         self::register_activation_hooks();

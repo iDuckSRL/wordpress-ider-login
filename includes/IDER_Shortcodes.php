@@ -6,12 +6,13 @@ class IDER_Shortcodes
 
     static function init()
     {
-        add_shortcode('sso_button', [__CLASS__, 'single_sign_on_login_button_shortcode']);
+        add_shortcode('ider_login_button', [__CLASS__, 'ider_login_button']);
         add_shortcode('ider_profile_summary', [__CLASS__, 'ider_profile_summary']);
     }
 
 
-    static function single_sign_on_login_button_shortcode($atts = [])
+
+    static function ider_login_button($atts = [])
     {
         $a = shortcode_atts(array(
             'title' => 'Login using Single Sign On',
@@ -23,17 +24,30 @@ class IDER_Shortcodes
 
 
         if (!is_user_logged_in()) {
-            return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . site_url('?auth=ider') . '" title="' . $a['title'] . '" target="' . $a['target'] . '"><img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px">' . $a['text'] . '</a>';
+            return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . site_url('?auth=ider') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
+                    <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px">' .
+                    $a['text'] .
+                    '</a>';
         } else {
             if (!$a['loginonly']) {
-                return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '"><img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px"> Logout</a>';
+                return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
+                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px"> Logout</a>';
             }
         }
     }
 
 
-    static function ider_profile_summary()
+    static function ider_profile_summary($atts = [])
     {
+
+        $a = shortcode_atts(array(
+            'title' => 'Ider profile Summary ',
+            'class' => 'button button-primary button-large',
+            'target' => '',
+            'text' => 'Login with IDer',
+            'loginonly' => ''
+        ), $atts);
+
 
         $user = get_user_by('id', get_current_user_id());
 
