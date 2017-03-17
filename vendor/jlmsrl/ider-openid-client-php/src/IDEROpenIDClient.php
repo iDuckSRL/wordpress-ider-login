@@ -456,6 +456,9 @@ class IDEROpenIDClient
         $auth_endpoint = $this->getProviderConfigValue("authorization_endpoint");
         $response_type = "code";
 
+        // Save scope for future porpoise
+        $_SESSION['openid_connect_scope'] = $this->scopes;
+
         // Generate and store a nonce in the session
         // The nonce is an arbitrary value
         $nonce = $this->generateRandString();
