@@ -1,8 +1,14 @@
 <?php
 
-/*
+/**
  * Add custom endpoint that appears in My Account Page - WooCommerce 2.6
  * Ref - https://gist.github.com/claudiosmweb/a79f4e3992ae96cb821d3b357834a005#file-custom-my-account-endpoint-php
+ *
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
  */
 
 

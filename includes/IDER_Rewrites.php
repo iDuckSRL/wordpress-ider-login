@@ -1,9 +1,13 @@
 <?php
+
 /**
- * File: rewrites.php
+ * Plugin Routing
  *
- * @author Justin Greer <justin@justin-greer.com
- * @package WP Single Sign On Client
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
  */
 
 defined('ABSPATH') or die('No script kiddies please!');

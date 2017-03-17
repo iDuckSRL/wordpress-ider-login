@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Admin stuff to configurate plugin.
+ *
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
+ */
 
 class IDER_Helpers
 {

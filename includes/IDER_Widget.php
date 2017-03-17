@@ -1,6 +1,15 @@
 <?php
 
-
+/**
+ *
+ * Widgets
+ *
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
+ */
 
 class IDER_Widget extends WP_Widget {
 

@@ -3,11 +3,15 @@
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * Class IDER_Admin
+ * Admin stuff to configurate plugin.
  *
- * @author Justin Greer <justin@justin-greer.com
- * @package WP Single Sign On Client
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
  */
+
 class IDER_Admin
 {
 

@@ -98,20 +98,12 @@ class IDER_Server
 
             $userInfo = $iderconnect->requestUserInfo();
 
-
-            $handled = false;
-            // pass the controll to user defined functions
-            $handled = apply_filters('callback_handler', $userInfo);
-
-            // if user function hadn't been exclusive let's resume the standard flow
-            if (!$handled) {
-                IDER_UserManager::userinfo_handler($userInfo);
-            }
+            IDER_Callback::handler($userInfo);
 
             exit;
 
         } catch (Exception $e) {
-            IDER_UserManager::access_denied($e->getMessage());
+            IDER_Callback::access_denied($e->getMessage());
         } finally {
             exit;
         }

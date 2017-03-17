@@ -1,15 +1,39 @@
 <?php
 
+/**
+ * Callback handler
+ *
+ * @package     WordPress
+ * @subpackage  Ider
+ * @author      Davide Lattanzio <plugins@jlm.srl>
+ * @since       1.0
+ *
+ */
 
-class IDER_UserManager
+class IDER_Callback
 {
 
-
-    static function userinfo_handler($user_info)
+    static function handler($user_info)
     {
         // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
 
-        $user_info = self::userInfoNormalize($user_info);
+        $user_info = IDER_UserInfoManager::normalize($user_info);
+
+        $handled = false;
+        // pass the controll to user defined functions
+        $handled = apply_filters('callback_handler', $user_info);
+
+        // if user function hadn't been exclusive let's resume the standard flow
+        if (!$handled) {
+            IDER_Callback::defaultHandler($user_info);
+        }
+    }
+
+
+    // register or authenticate user
+    static function defaultHandler($user_info)
+    {
+        // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
 
         // check if user exists by email
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
@@ -39,23 +63,7 @@ class IDER_UserManager
             exit;
         }
 
-        IDER_UserManager::access_denied("User unable to login.");
-    }
-
-
-    static function userInfoNormalize($user_info)
-    {
-        $user_info = (array)$user_info;
-
-        // explode json packed claims
-        $user_info = self::_checkJsonfields($user_info);
-
-        // remap openID fields into local fields
-        $user_info = self::_fieldsMap($user_info);
-
-        $user_info = (object)$user_info;
-
-        return $user_info;
+        IDER_Callback::access_denied("User unable to login.");
     }
 
 
@@ -150,44 +158,6 @@ class IDER_UserManager
             wp_set_auth_cookie($user->ID);
         }
 
-    }
-
-
-    private static function _fieldsMap($userdata)
-    {
-        $fields = array();
-
-        $fields = apply_filters('ider_fields_map', $fields);
-
-        foreach ($fields as $localkey => $remotekey) {
-            if (!empty($userdata[$remotekey])) {
-                $userdata[$localkey] = $userdata[$remotekey];
-                // unset($userdata[$remotekey]);
-            }
-        }
-
-        return $userdata;
-    }
-
-
-    private static function _checkJsonfields($userdata)
-    {
-
-        foreach ($userdata as $key => $claim) {
-            if (IDER_Helpers::isJSON($claim)) {
-                $subclaims = json_decode($claim);
-
-                // break down the claim
-                foreach ($subclaims as $subkey => $subclaim) {
-                    $userdata[$key . '_' . $subkey] = $subclaim;
-                }
-
-                // delete the original claim
-                unset($userdata[$key]);
-            }
-        }
-
-        return $userdata;
     }
 
 
