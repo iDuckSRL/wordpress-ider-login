@@ -41,7 +41,7 @@ if (!defined('IDER_SITE_DOMAIN')) {
 }
 
 // Enable shortcodes in text widgets
-add_filter('widget_text','do_shortcode');
+add_filter('widget_text', 'do_shortcode');
 
 // require the main lib
 require_once IDER_PLUGIN_DIR . '/vendor/autoload.php';
@@ -98,17 +98,27 @@ add_filter('ider_fields_map', function ($fields) {
 });
 
 
-// If you need custom data handler you can hook here. $handler = true will prevent the default action
-add_filter('callback_handler', function ($user_info) {
+// If you need custom data handler you can hook here.
+add_filter('before_callback_handler', function ($user_info, $scopes) {
 
-    if (in_array('yourscope', $_SESSION['openid_connect_scope'])) {
+    if (in_array('yourscope', $scopes)) {
         // do something...
 
         // true will prevent further processing
         return true;
     }
 
-});
+}, 10, 2);
+
+
+// If you need custom data handler you can hook here. $handler = true will prevent the default action
+add_filter('after_callback_handler', function ($user_info, $scopes) {
+
+    if (in_array('yourscope', $scopes)) {
+        // do something...
+    }
+
+}, 10, 2);
 
 
 

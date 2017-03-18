@@ -21,11 +21,12 @@ class IDER_Callback
 
         $handled = false;
         // pass the controll to user defined functions
-        $handled = apply_filters('callback_handler', $user_info);
+        $handled = apply_filters('before_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
 
         // if user function hadn't been exclusive let's resume the standard flow
         if (!$handled) {
             IDER_Callback::defaultHandler($user_info);
+            apply_filters('before_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
         }
     }
 
