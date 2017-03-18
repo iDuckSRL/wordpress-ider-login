@@ -40,7 +40,7 @@ class IDEROpenIDClient
     /**
      * @var string IDER server
      */
-    static $IDERRedirectURL = 'callback';
+    static $IDERRedirectURL = 'idercallback';
 
     /**
      * @var string IDER server
