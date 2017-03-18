@@ -1,4 +1,4 @@
-# Wordpress IDer Connect
+# IDer Login for Wordpress
 
-This plugin allows to register and connect via the IDer Open ID server.
+This plugin allows to register and connect via the IDer Server.
 This comes along a lot of features.
