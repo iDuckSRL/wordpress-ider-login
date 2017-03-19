@@ -48,7 +48,7 @@ require_once IDER_PLUGIN_DIR . '/vendor/autoload.php';
 require_once IDER_PLUGIN_DIR . '/includes/IDER_Server.php';
 
 // QA environment
-\IDERConnect\IDEROpenIDClient::$IDERServer = 'https://qaoid.ider.com/core';
+//\IDERConnect\IDEROpenIDClient::$IDERServer = 'https://qaoid.ider.com/core';
 
 // bootstrap the plugin
 IDER_Server::instance();
@@ -101,12 +101,14 @@ add_filter('ider_fields_map', function ($fields) {
 // If you need custom data handler you can hook here.
 add_filter('before_callback_handler', function ($user_info, $scopes) {
 
+    $handled = false;
     if (in_array('yourscope', $scopes)) {
         // do something...
 
         // true will prevent further processing
-        return true;
+        $handled = true;
     }
+    return $handled;
 
 }, 10, 2);
 
