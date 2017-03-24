@@ -60,7 +60,11 @@ class IDER_Callback
         self::_update_usermeta($user->ID, $user_info);
 
         if (is_user_logged_in()) {
-            wp_redirect(IDER_Server::get_option('welcome_page'));
+            if (true == IDER_Server::get_option('redirect_to_page')) {
+                wp_redirect(IDER_Server::get_option('welcome_page'));
+            } else {
+                wp_redirect(home_url());
+            }
             exit;
         }
 
