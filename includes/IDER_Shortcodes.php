@@ -29,6 +29,8 @@ class IDER_Shortcodes
 
     static function ider_login_button($atts = [])
     {
+        wp_enqueue_style('ider-css', IDER_PLUGIN_URL . 'assets/css/general.css', false, IDER_CLIENT_VERSION, 'all');
+
         $a = shortcode_atts(array(
             'title' => 'Login using Single Sign On',
             'class' => 'button button-primary button-large',

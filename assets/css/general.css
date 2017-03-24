@@ -6,3 +6,11 @@
     background: #fffbd5;
 }
 
+.ider-login {
+    text-align: center !important;
+    background: #428bca;
+    color: #FFF !important;
+    padding: 10px;
+    width: inherit !important;
+    display: block;
+}
