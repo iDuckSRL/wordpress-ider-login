@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: IDer Login
- * Plugin URI: https://oid.ider.com/core
- * Version: 0.8.0
- * Description: Provides Single Sign On integration with IDer Identity Server using OpenID specs.
- * Author: Davide Lattanzio
- * Author URI: https://oid.ider.com/core
+ * Plugin URI: https://www.ider.com
+ * Version: 1.0.1
+ * Description: Provides Single Sign On via IDer Identity Server
+ * Author: JLM srl
+ * Author URI: https://jlm.srl
  * License: GPL2
  *
  * This program is GLP but; you can redistribute it and/or modify
