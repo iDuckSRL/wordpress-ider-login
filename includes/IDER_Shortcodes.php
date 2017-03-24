@@ -33,7 +33,7 @@ class IDER_Shortcodes
 
         $a = shortcode_atts(array(
             'title' => 'Login using Single Sign On',
-            'class' => 'button button-primary button-large',
+            'class' => 'button button-primary button-large ider-login',
             'target' => '',
             'text' => 'Login with IDer',
             'loginonly' => ''
