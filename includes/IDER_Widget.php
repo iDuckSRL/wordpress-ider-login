@@ -46,7 +46,7 @@ class IDER_Widget extends WP_Widget {
         if ( ! empty( $instance['title'] ) ) {
             echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
         }
-        echo IDER_Shortcodes::single_sign_on_login_button_shortcode($instance);
+        echo IDER_Shortcodes::ider_login_button($args);
         echo $args['after_widget'];
     }
 
