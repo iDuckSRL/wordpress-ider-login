@@ -2,7 +2,7 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://www.ider.com
- * Version: 1.0.1
+ * Version: 1.0.2
  * Description: Provides Single Sign On via IDer Identity Server
  * Author: JLM srl
  * Author URI: https://jlm.srl
