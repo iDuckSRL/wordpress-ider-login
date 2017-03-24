@@ -131,8 +131,8 @@ class IDER_Admin
                     <tr valign="top">
                         <th scope="row">Redirect to the IDer welcome page</th>
                         <td>
-                            <input type="checkbox" name="<?php echo $this->option_name ?>[redirect_to_dashboard]"
-                                   value="1" <?php echo $options['redirect_to_dashboard'] == 1 ? 'checked="checked"' : ''; ?> />
+                            <input type="checkbox" name="<?php echo $this->option_name ?>[redirect_to_page]"
+                                   value="1" <?php echo $options['redirect_to_page'] == 1 ? 'checked="checked"' : ''; ?> />
                         </td>
                     </tr>
 
@@ -204,7 +204,7 @@ class IDER_Admin
      */
     public function validate($input)
     {
-        $input['redirect_to_dashboard'] = isset($input['redirect_to_dashboard']) ? $input['redirect_to_dashboard'] : 0;
+        $input['redirect_to_page'] = isset($input['redirect_to_page']) ? $input['redirect_to_page'] : 0;
 
         return $input;
     }

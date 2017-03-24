@@ -22,7 +22,7 @@ class IDER_Server
         'client_id' => '',
         'client_secret' => '',
         'extra_scopes' => '',
-        'redirect_to_dashboard' => true,
+        'redirect_to_page' => true,
         'login_form_button' => true,
         'welcome_page' => 'my-account/ider-profile'
     );
