@@ -39,16 +39,15 @@ class IDER_Shortcodes
             'loginonly' => ''
         ), $atts);
 
-
         if (!is_user_logged_in()) {
-            return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . site_url('?auth=ider') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
-                    <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px">' .
+            return '<a class="' . $a['class'] . '" href="' . site_url('/iderbutton') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
+                    <img src="' . IDER_PLUGIN_URL . 'assets/images/ider_logo_white_32.png">' .
                     $a['text'] .
                     '</a>';
         } else {
             if (!$a['loginonly']) {
-                return '<a class="' . $a['class'] . '" style="width: 100%; text-align: center" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
-                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png" style="display: inline; vertical-align: sub;margin-right: 5px"> Logout</a>';
+                return '<a class="' . $a['class'] . '" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
+                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png"> Logout</a>';
             }
         }
     }
@@ -83,7 +82,7 @@ class IDER_Shortcodes
         foreach ($fields as $localfield) {
 
             // skip shipping fields
-            //if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
+            if (preg_match("/^billing_(.*)/i", $localfield)) continue;
 
             $tbody .= '<tr class="' . (in_array($localfield, $updated_fields) ? 'warning' : '') . '"><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>';
             if ($usermetas[$localfield]) {

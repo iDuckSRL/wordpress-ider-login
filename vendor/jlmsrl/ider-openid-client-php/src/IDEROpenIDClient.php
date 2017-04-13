@@ -36,6 +36,10 @@ class IDEROpenIDClient
      */
     static $defaultScope = 'openid';
 
+    /**
+     * @var string IDER server
+     */
+    static $IDEButtonURL = 'iderbutton';
 
     /**
      * @var string IDER server

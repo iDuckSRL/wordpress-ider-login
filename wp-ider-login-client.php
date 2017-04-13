@@ -2,7 +2,7 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://www.ider.com
- * Version: 1.0.2
+ * Version: 1.4.1
  * Description: Provides Single Sign On via IDer Identity Server
  * Author: JLM srl
  * Author URI: https://jlm.srl
@@ -60,11 +60,11 @@ add_filter('ider_fields_map', function ($fields) {
     $fields['ider_sub'] = 'sub';
     $fields['first_name'] = 'given_name';
     $fields['last_name'] = 'family_name';
-    $fields['nickname'] = 'nickname';
+    //$fields['nickname'] = 'nickname';
     $fields['email'] = 'email';
     $fields['display_name'] = 'preferred_user_name';
     $fields['url'] = 'website';
-    $fields['description'] = 'note';
+    $fields['description'] = 'how_known_us';
 
     $fields['billing_address_1'] = 'address_company_street_address';
     $fields['billing_address_2'] = '';

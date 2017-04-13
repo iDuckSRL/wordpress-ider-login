@@ -68,7 +68,7 @@ class IDER_Rewrites
 
 
         // if auth code or callback: pass the control to library
-        if ('ider' == $wp_query->get('auth') or $wp_query->get('name') == IDEROpenIDClient::$IDERRedirectURL) {
+        if ('ider' == $wp_query->get('auth') or $wp_query->get('name') == IDEROpenIDClient::$IDERRedirectURL or $wp_query->get('name') == IDEROpenIDClient::$IDEButtonURL) {
            IDER_Server::IDerOpenIdClientHandler();
         }
 

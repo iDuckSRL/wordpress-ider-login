@@ -15,7 +15,6 @@ class IDER_Callback
 
     static function handler($user_info)
     {
-        // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
 
         $user_info = IDER_UserInfoManager::normalize($user_info);
 
@@ -34,7 +33,6 @@ class IDER_Callback
     // register or authenticate user
     static function defaultHandler($user_info)
     {
-        // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
 
         // check if user exists by email
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
@@ -43,6 +41,8 @@ class IDER_Callback
         // check if user exists by sub
         if (!$user->ID) {
             $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
+
+            // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
         }
 
         // if new, register first
