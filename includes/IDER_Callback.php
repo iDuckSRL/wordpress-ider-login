@@ -25,7 +25,6 @@ class IDER_Callback
         // if user function hadn't been exclusive let's resume the standard flow
         if (!$handled) {
             IDER_Callback::defaultHandler($user_info);
-            apply_filters('before_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
         }
     }
 
@@ -60,6 +59,9 @@ class IDER_Callback
         self::_update_usermeta($user->ID, $user_info);
 
         if (is_user_logged_in()) {
+            // pass the controll to user defined functions and landing pages
+            apply_filters('after_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
+
             if (true == IDER_Server::get_option('redirect_to_page')) {
                 wp_redirect(IDER_Server::get_option('welcome_page'));
             } else {

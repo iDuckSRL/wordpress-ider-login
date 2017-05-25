@@ -92,6 +92,21 @@ add_filter('after_callback_handler', function ($user_info, $scopes) {
         // do something...
     }
 
+    $options = get_option("wposso_options");
+    $landing_pages = $options["landing_pages"];
+
+    preg_match_all('/^(?!#)([\w-]+)=(.+)/m', $landing_pages, $matches);
+
+    $landing_pages_r = array_combine($matches[1], $matches[2]);
+
+    foreach ($landing_pages_r as $scope => $landing_page) {
+        if (in_array($scope, $scopes)) {
+
+            wp_redirect($landing_page);
+            exit;
+        }
+    }
+
 }, 10, 2);
 
 

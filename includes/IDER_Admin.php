@@ -165,6 +165,13 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
+                        <th scope="row">Scopes Landing pages</th>
+                        <td>
+                            <textarea name="<?php echo $this->option_name ?>[landing_pages]"><?php echo $options["landing_pages"]; ?></textarea>
+                        </td>
+                    </tr>
+
+                    <tr valign="top">
                         <th scope="row">IDer Button additional css</th>
                         <td>
                             <textarea
