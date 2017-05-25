@@ -2,7 +2,7 @@
 Tags: IDer, login, sso, qrcode, openid, client, oauth2
 Requires at least: 4.6
 Tested up to: 4.7.3
-Stable tag: 1.4.1
+Stable tag: 1.5
 License: Apache License, Version 2.0 or later
 License URI: http://directory.fsf.org/wiki/License:Apache2.0
 
@@ -59,5 +59,11 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 = 1.4.1 =
 * First fully working release
 
-
+= 1.5 =
+* Added IDER_SERVER parameter for testing
+* Missing image
+* Minor in getProviderConfigValue
+* Fixed wrong paths for admin assets
+* Fields mapping as plugin setting in admin panel
+* Additional css for IDer button
 
