@@ -164,6 +164,15 @@ class IDER_Admin
                         </td>
                     </tr>
 
+                    <tr valign="top">
+                        <th scope="row">IDer Button additional css</th>
+                        <td>
+                            <textarea
+                                name="<?php echo $this->option_name ?>[button_css]"><?php echo $options["button_css"]; ?></textarea>
+
+                        </td>
+                    </tr>
+
                 </table>
 
                 <p class="submit">

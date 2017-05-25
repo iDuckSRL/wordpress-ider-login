@@ -25,6 +25,7 @@ class IDER_Server
         'redirect_to_page' => true,
         'login_form_button' => true,
         'welcome_page' => 'my-account/ider-profile',
+        'button_css' => '',
         'fields_mapping' => '
 ider_sub=sub
 first_name=given_name
