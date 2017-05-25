@@ -336,12 +336,10 @@ class IDEROpenIDClient
             $this->providerConfig = (array)json_decode($this->fetchURL($well_known_config_url));
 
             IDERHelpers::logRotate('Discovery: ' . print_r($this->providerConfig, 1), static::$IDERLogFile);
+        }
 
-
-            if (!$this->providerConfig[$param]) {
-                throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
-            }
-
+        if (!isset($this->providerConfig[$param])) {
+            throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
         }
 
         return $this->providerConfig[$param];
@@ -778,7 +776,7 @@ class IDEROpenIDClient
 
         }
 
-        // If we set some heaers include them
+        // If we set some headers include them
         if (count($headers) > 0) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
