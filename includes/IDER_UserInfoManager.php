@@ -39,7 +39,7 @@ class IDER_UserInfoManager
         foreach ($fields as $localkey => $remotekey) {
             if (!empty($userdata[$remotekey])) {
                 $userdata[$localkey] = $userdata[$remotekey];
-                // unset($userdata[$remotekey]);
+                //unset($userdata[$remotekey]);
             }
         }
 
@@ -56,7 +56,7 @@ class IDER_UserInfoManager
 
                 // break down the claim
                 foreach ($subclaims as $subkey => $subclaim) {
-                    $userdata[$key . '_' . $subkey] = $subclaim;
+                    $userdata[$key . '.' . $subkey] = $subclaim;
                 }
 
                 // delete the original claim

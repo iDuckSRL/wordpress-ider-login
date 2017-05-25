@@ -24,8 +24,31 @@ class IDER_Server
         'extra_scopes' => '',
         'redirect_to_page' => true,
         'login_form_button' => true,
-        'welcome_page' => 'my-account/ider-profile'
-    );
+        'welcome_page' => 'my-account/ider-profile',
+        'fields_mapping' => '
+ider_sub=sub
+first_name=given_name
+last_name=family_name
+# nickname=nickname
+email=email
+display_name=preferred_user_name
+url=website
+description=note
+
+billing_address_1=address.street_address
+billing_address_2=
+billing_city=address.locality
+billing_state=address.region
+billing_postcode=address.postal_code
+billing_country=address.country
+
+# tmp
+billing_first_name=given_name
+billing_last_name=family_name
+billing_company=
+billing_phone=phone_number
+billing_email=email
+');
 
 
     function __construct()
@@ -58,7 +81,7 @@ class IDER_Server
 
         if ($option === null) {
             return self::$options;
-        } else if (array_key_exists($option, self::$options)) {
+        } else if (@array_key_exists($option, self::$options)) {
             return self::$options[$option];
         } else {
             return null;

@@ -152,35 +152,15 @@ class IDER_Admin
 
                 </table>
 
-                <!--
-                <h3 class="seperator">Advanced Options</h3>
-                <table class="form-table">
+                <h4><a href="#" id="advancedbtn">Advanced Options &raquo;</a></h4>
+
+                <table class="form-table" id="advancedopts">
 
                     <tr valign="top">
-                        <th scope="row">OAuth Server URL</th>
+                        <th scope="row">Field Mapping</th>
                         <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[server_url]" min="10"
-                                   value="<?php echo $options["server_url"]; ?>"/>
-                            <p class="description">Example: https://your-site.com</p>
-                        </td>
-                    </tr>
-
-                    <tr valign="top">
-                        <th scope="row">Authorization Endpoint</th>
-                        <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[server_auth_endpoint]" min="10"
-                                   value="<?php echo $options["server_auth_endpoint"]; ?>"/>
-                        </td>
-                    </tr>
-
-                    <tr valign="top">
-                        <th scope="row">Server Token Endpoint</th>
-                        <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[server_token_endpont]" min="10"
-                                   value="<?php echo $options["server_token_endpont"]; ?>"/>
-                        </td>
-                    </tr>
-
+                            <textarea
+                                name="<?php echo $this->option_name ?>[fields_mapping]"><?php echo $options["fields_mapping"]; ?></textarea>
                         </td>
                     </tr>
 

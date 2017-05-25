@@ -57,42 +57,12 @@ IDER_Server::instance();
 /* If you need customization (ie: field map) you can write below */
 add_filter('ider_fields_map', function ($fields) {
 
-    $fields['ider_sub'] = 'sub';
-    $fields['first_name'] = 'given_name';
-    $fields['last_name'] = 'family_name';
-    //$fields['nickname'] = 'nickname';
-    $fields['email'] = 'email';
-    $fields['display_name'] = 'preferred_user_name';
-    $fields['url'] = 'website';
-    $fields['description'] = 'how_known_us';
+    $options = get_option("wposso_options");
+    $fields_mapping = $options["fields_mapping"];
 
-    $fields['billing_address_1'] = 'address_company_street_address';
-    $fields['billing_address_2'] = '';
-    $fields['billing_city'] = 'address_company_locality';
-    $fields['billing_state'] = 'address_company_region';
-    $fields['billing_postcode'] = 'address_company_postal_code';
-    $fields['billing_country'] = 'address_company_country';
+    preg_match_all('/^(?!#)(\w+)=([\w\.]+)/m', $fields_mapping, $matches);
 
-    $fields['shipping_address_1'] = 'address_shipping_street_address';
-    $fields['shipping_address_2'] = '';
-    $fields['shipping_city'] = 'address_shipping_locality';
-    $fields['shipping_state'] = 'address_shipping_region';
-    $fields['shipping_postcode'] = 'address_shipping_postal_code';
-    $fields['shipping_country'] = 'address_shipping_country';
-
-    // tmp
-    $fields['billing_first_name'] = 'given_name';
-    $fields['billing_last_name'] = 'family_name';
-    $fields['billing_company'] = '';
-    $fields['billing_phone'] = 'phone_number';
-    $fields['billing_email'] = 'email';
-
-    $fields['shipping_first_name'] = 'given_name';
-    $fields['shipping_last_name'] = 'family_name';
-    $fields['shipping_company'] = '';
-    $fields['shipping_phone'] = 'phone_number';
-    $fields['shipping_email'] = 'email';
-    // --
+    $fields = array_combine($matches[1], $matches[2]);
 
     return $fields;
 });
