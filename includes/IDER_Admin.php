@@ -32,8 +32,8 @@ class IDER_Admin
      */
     public function register_admin_assets()
     {
-        wp_register_style('wposso_admin', plugins_url('/assets/css/admin.css', __FILE__));
-        wp_register_script('wposso_admin', plugins_url('/assets/js/admin.js', __FILE__));
+        wp_register_style('wposso_admin', plugins_url('../assets/css/admin.css', __FILE__));
+        wp_register_script('wposso_admin', plugins_url('../assets/js/admin.js', __FILE__));
     }
 
     /**
@@ -86,7 +86,10 @@ class IDER_Admin
                         <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chose.</li>
-                    <li>If you need it, set the offline QR campaign as <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter admin page</li>
+                    <li>If you need it, set the offline QR campaign as
+                        <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter
+                        admin page
+                    </li>
                 </ol>
             </div>
             <form method="post" action="options.php">
@@ -120,11 +123,11 @@ class IDER_Admin
 
                     <tr valign="top">
 
-                    <th scope="row">Add IDer button in the classic WP login form</th>
-                    <td>
-                        <input type="checkbox" name="<?php echo $this->option_name ?>[login_form_button]"
-                               value="1" <?php echo $options['login_form_button'] == 1 ? 'checked="checked"' : ''; ?> />
-                    </td>
+                        <th scope="row">Add IDer button in the classic WP login form</th>
+                        <td>
+                            <input type="checkbox" name="<?php echo $this->option_name ?>[login_form_button]"
+                                   value="1" <?php echo $options['login_form_button'] == 1 ? 'checked="checked"' : ''; ?> />
+                        </td>
                     </tr>
 
 
@@ -140,8 +143,10 @@ class IDER_Admin
                     <tr valign="top">
                         <th scope="row">Welcome page</th>
                         <td>
-                            <?php echo site_url(); ?>/<input type="text" name="<?php echo $this->option_name ?>[welcome_page]" min="10"
-                                   value="<?php echo $options["welcome_page"]; ?>"/>
+                            <?php echo site_url(); ?>/<input type="text"
+                                                             name="<?php echo $this->option_name ?>[welcome_page]"
+                                                             min="10"
+                                                             value="<?php echo $options["welcome_page"]; ?>"/>
                         </td>
                     </tr>
 
@@ -176,16 +181,10 @@ class IDER_Admin
                         </td>
                     </tr>
 
-                    <tr valign="top">
-                        <th scope="row">User Information Endpoint</th>
-                        <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[user_info_endpoint]" min="10"
-                                   value="<?php echo $options["user_info_endpoint"]; ?>"/>
-                            <p class="description">Example: https://your-site.com</p>
                         </td>
                     </tr>
+
                 </table>
-                -->
 
                 <p class="submit">
                     <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>"/>
