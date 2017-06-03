@@ -85,7 +85,7 @@ class IDER_Shortcodes
         foreach ($fields as $localfield) {
 
             // skip shipping fields
-            if (preg_match("/^billing_(.*)/i", $localfield)) continue;
+            if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
 
             $tbody .= '<tr class="' . (in_array($localfield, $updated_fields) ? 'warning' : '') . '"><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>';
             if ($usermetas[$localfield]) {
