@@ -3,7 +3,12 @@
 }
 
 table td input[type="text"] {
-    max-width: 300px;
+    max-width: 330px;
+    width: 100%;
+}
+
+table td input[type="password"] {
+    max-width: 330px;
     width: 100%;
 }
 
