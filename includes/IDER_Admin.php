@@ -86,9 +86,7 @@ class IDER_Admin
                         <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong></li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chose.</li>
-                    <li>If you need it, set the offline QR campaign as
-                        <strong><?php echo site_url('?auth=ider&scope='); ?>&lt;campaign_id&gt;</strong> in IDer Parter
-                        admin page
+                    <li>If you open a custom campaign and want your customer to land on a specific page, please configure it in the advanced setting "Campaigns Landing pages" using the format <strong>&lt;Campaign id&gt;=&lt;Landing Page&gt;</strong>
                     </li>
                 </ol>
             </div>
@@ -113,11 +111,10 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                        <th scope="row">Campaign IDs</th>
+                        <th scope="row">Login button scope</th>
                         <td>
                             <input type="text" name="<?php echo $this->option_name ?>[extra_scopes]" min="10"
                                    value="<?php echo $options["extra_scopes"]; ?>"/>
-                            <p class="description">'openid' scope is always included</p>
                         </td>
                     </tr>
 
@@ -165,7 +162,7 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                        <th scope="row">Scopes Landing pages</th>
+                        <th scope="row">Campaigns Landing pages</th>
                         <td>
                             <textarea name="<?php echo $this->option_name ?>[landing_pages]"><?php echo $options["landing_pages"]; ?></textarea>
                         </td>
