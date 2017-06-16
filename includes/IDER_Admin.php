@@ -87,6 +87,7 @@ class IDER_Admin
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chose.</li>
                     <li>If you open a custom campaign and want your customer to land on a specific page, please configure it in the advanced setting "Campaigns Landing pages" using the format <strong>&lt;Campaign id&gt;=&lt;Landing Page&gt;</strong>
+                    <li>You can place the IDer button everywhere using widget, the classic form or the shortcode [ider_login_button]</li>
                     </li>
                 </ol>
             </div>
@@ -111,7 +112,7 @@ class IDER_Admin
                     </tr>
 
                     <tr valign="top">
-                        <th scope="row">Login button scope</th>
+                        <th scope="row">Scope Name</th>
                         <td>
                             <input type="text" name="<?php echo $this->option_name ?>[extra_scopes]" min="10"
                                    value="<?php echo $options["extra_scopes"]; ?>"/>
@@ -127,23 +128,13 @@ class IDER_Admin
                         </td>
                     </tr>
 
-
-                    <tr valign="top">
-                        <th scope="row">Redirect to the IDer welcome page</th>
-                        <td>
-                            <input type="checkbox" name="<?php echo $this->option_name ?>[redirect_to_page]"
-                                   value="1" <?php echo $options['redirect_to_page'] == 1 ? 'checked="checked"' : ''; ?> />
-                        </td>
-                    </tr>
-
-
                     <tr valign="top">
                         <th scope="row">Welcome page</th>
                         <td>
                             <?php echo site_url(); ?>/<input type="text"
                                                              name="<?php echo $this->option_name ?>[welcome_page]"
                                                              min="10"
-                                                             value="<?php echo $options["welcome_page"]; ?>"/>
+                                                             value="<?php echo preg_replace('/^(\/)*/i','',str_replace(site_url(), '' ,$options["welcome_page"])); ?>"/>
                         </td>
                     </tr>
 
@@ -196,7 +187,11 @@ class IDER_Admin
      */
     public function validate($input)
     {
-        $input['redirect_to_page'] = isset($input['redirect_to_page']) ? $input['redirect_to_page'] : 0;
+
+        $input['client_id'] = trim($input['client_id']);
+        $input['client_secret'] = trim($input['client_secret']);
+        $input['extra_scopes'] = trim($input['extra_scopes']);
+        $input['welcome_page'] = site_url(trim($input['welcome_page']));
 
         return $input;
     }

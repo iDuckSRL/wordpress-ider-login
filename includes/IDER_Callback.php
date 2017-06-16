@@ -62,11 +62,8 @@ class IDER_Callback
             // pass the controll to user defined functions and landing pages
             apply_filters('after_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
 
-            if (true == IDER_Server::get_option('redirect_to_page')) {
-                wp_redirect(IDER_Server::get_option('welcome_page'));
-            } else {
-                wp_redirect(home_url());
-            }
+            wp_redirect(IDER_Server::get_option('welcome_page'));
+
             exit;
         }
 

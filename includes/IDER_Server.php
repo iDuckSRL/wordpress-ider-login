@@ -22,7 +22,6 @@ class IDER_Server
         'client_id' => '',
         'client_secret' => '',
         'extra_scopes' => '',
-        'redirect_to_page' => true,
         'login_form_button' => true,
         'welcome_page' => 'my-account/ider-profile',
         'button_css' => '',
@@ -180,10 +179,27 @@ billing_email=email
      */
     public function setup()
     {
-        $options = get_option("wposso_options");
-        if (!isset($options["server_url"])) {
-            update_option("wposso_options", self::$default_settings);
+
+        $options = self::$default_settings;
+
+        // if woocommerce then set the welcome page to user profile
+        if (class_exists('WooCommerce')) {
+            $options['welcome_page'] = site_url('my-account/ider-profile');
+        } else {
+            $options['welcome_page'] = home_url();
         }
+
+        update_option("wposso_options", $options);
+
+    }
+
+
+    /**
+     * Plugin Setup
+     */
+    public function upgrade()
+    {
+
     }
 
 
