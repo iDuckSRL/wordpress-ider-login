@@ -40,6 +40,7 @@ class IDER_Callback
         // check if user exists by sub
         if (!$user->ID) {
             $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
+            $user = @$user[0];
 
             // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
         }
