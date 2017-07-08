@@ -38,19 +38,20 @@ class IDER_Shortcodes
             'title' => 'Login using Single Sign On',
             'class' => 'button button-primary button-large ider-login',
             'target' => '',
-            'text' => 'Login with IDer',
+            'text' => 'Login with IDer|Logout',
             'loginonly' => ''
         ), $atts);
+
+        list($logintext, $logouttext) = explode('|', $a['text']);
 
         if (!is_user_logged_in()) {
             return '<a class="' . $a['class'] . '" href="' . site_url('/iderbutton') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
                     <img src="' . IDER_PLUGIN_URL . 'assets/images/ider_logo_white_32.png">' .
-                    $a['text'] .
-                    '</a>';
+            $logintext . '</a>';
         } else {
             if (!$a['loginonly']) {
                 return '<a class="' . $a['class'] . '" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
-                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png"> Logout</a>';
+                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png">' . $logouttext . '</a>';
             }
         }
     }
