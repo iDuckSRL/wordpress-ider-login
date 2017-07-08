@@ -54,7 +54,7 @@ class IDER_Callback
 
         // Log the User In
         self::_login($user);
-        do_action('wp_login', $user_info->email);
+        do_action('wp_login', $user_info->email, $user);
 
         // update user data
         self::_update_usermeta($user->ID, $user_info);
