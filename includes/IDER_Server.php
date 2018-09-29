@@ -65,8 +65,8 @@ billing_email=email
 
         // add IDER login button to WP login form
         if (self::get_option('login_form_button') == 1) {
-            add_action('login_form', [IDER_Shortcodes, 'ider_login_button_render']);
-            add_action('woocommerce_login_form_end', [IDER_Shortcodes, 'ider_login_button_render']);
+            add_action('login_form', [IDER_Shortcodes::class, 'ider_login_button_render']);
+            add_action('woocommerce_login_form_end', [IDER_Shortcodes::class, 'ider_login_button_render']);
         }
 
         self::register_activation_hooks();
