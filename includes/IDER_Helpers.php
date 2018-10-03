@@ -13,7 +13,6 @@
 class IDER_Helpers
 {
 
-
     static function logRotate($text, $filename, $ext = 'log')
     {
         $text = "[" .strftime("%Y-%m-%d %H:%M:%S") . "] " . $text . "\n";
