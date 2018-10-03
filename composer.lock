@@ -1,24 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "ed601fed77064497a8bfb8d1b02e832e",
-    "content-hash": "f8e07fd52950823456482d6283ddbb3b",
+    "content-hash": "890f8ca00e20465298d6e023a14b3d55",
     "packages": [
         {
             "name": "jlmsrl/ider-openid-client-php",
-            "version": "dev-master",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JLMsrl/ider-openid-client-php.git",
-                "reference": "fcd797e86bf671bf92c9089cca4dfe017423a06e"
+                "reference": "50a13d6f03f90ee068515865ca40d2e0c822055f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JLMsrl/ider-openid-client-php/zipball/fcd797e86bf671bf92c9089cca4dfe017423a06e",
-                "reference": "fcd797e86bf671bf92c9089cca4dfe017423a06e",
+                "url": "https://api.github.com/repos/JLMsrl/ider-openid-client-php/zipball/50a13d6f03f90ee068515865ca40d2e0c822055f",
+                "reference": "50a13d6f03f90ee068515865ca40d2e0c822055f",
                 "shasum": ""
             },
             "require": {
@@ -42,7 +41,7 @@
                 }
             ],
             "description": "IDER OpenID Generic Client for PHP",
-            "time": "2017-02-25 18:10:10"
+            "time": "2018-10-02T18:36:08+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -131,15 +130,13 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2016-01-18 17:07:21"
+            "time": "2016-01-18T17:07:21+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "jlmsrl/ider-openid-client-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

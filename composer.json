@@ -11,6 +11,6 @@
   "type": "project",
   "minimum-stability": "dev",
   "require": {
-    "jlmsrl/ider-openid-client-php": "dev-master"
+    "jlmsrl/ider-openid-client-php": "~1"
   }
 }
