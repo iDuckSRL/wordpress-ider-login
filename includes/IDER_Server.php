@@ -95,6 +95,9 @@ billing_email=email
     {
         \IDERConnect\IDEROpenIDClient::$IDERLogFile = IDER_PLUGIN_DIR . '/log/ider-connect.log';
 
+        // Override the base URL with the WP one.
+        \IDERConnect\IDEROpenIDClient::$BaseUrl = get_site_url();
+
         $options = get_option('wposso_options');
 
         if (is_null(\IDERConnect\IDEROpenIDClient::$_instance)) {
@@ -116,8 +119,6 @@ billing_email=email
             if (!empty($wp_query->get('scope'))) {
                 $iderconnect->setScope($wp_query->get('scope'));
             }
-
-            $iderconnect->setBaseUrl(get_site_url());
 
             $iderconnect->authenticate();
 
