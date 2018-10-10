@@ -117,6 +117,8 @@ billing_email=email
                 $iderconnect->setScope($wp_query->get('scope'));
             }
 
+            $iderconnect->setBaseUrl(get_site_url());
+
             $iderconnect->authenticate();
 
             $userInfo = $iderconnect->requestUserInfo();

@@ -36,10 +36,10 @@ class IDEROpenIDClient
      */
     static $defaultScope = 'openid';
 
-    /**
+     /**
      * @var string IDER server
      */
-    static $IDEButtonURL = 'iderbutton';
+    static $IDERButtonURL = 'iderbutton';
 
     /**
      * @var string IDER server
@@ -97,6 +97,11 @@ class IDEROpenIDClient
     private $idToken;
 
     /**
+     * @var string base URL
+     */
+    private $baseUrl;
+
+    /**
      * @var array holds scopes
      */
     private $scopes = array();
@@ -149,7 +154,9 @@ class IDEROpenIDClient
 
     private function boot()
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         IDERHelpers::logRotate('Session start', static::$IDERLogFile);
 
@@ -194,6 +201,14 @@ class IDEROpenIDClient
     public function setResponseTypes($response_types)
     {
         $this->responseTypes = array_merge($this->responseTypes, (array)$response_types);
+    }
+
+    /**
+     * @param $baseUrl
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -337,7 +352,7 @@ class IDEROpenIDClient
 
             IDERHelpers::logRotate('Discovery: ' . print_r($this->providerConfig, 1), static::$IDERLogFile);
         }
-
+        
         if (!isset($this->providerConfig[$param])) {
             throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
         }
@@ -385,6 +400,12 @@ class IDEROpenIDClient
      */
     protected function getBaseUrl()
     {
+
+        // If the base URL is set, then use it.
+        if($this->baseUrl){
+            return $this->baseUrl;
+        }
+
         /**
          * Thank you
          * http://stackoverflow.com/questions/189113/how-do-i-get-current-page-full-url-in-php-on-a-windows-iis-server
@@ -400,6 +421,7 @@ class IDEROpenIDClient
         $port = null;
         $hostname = null;
         $setport = null;
+        $uri = strtok($_SERVER["REQUEST_URI"],'?'); // removed query string
 
         if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
@@ -429,11 +451,13 @@ class IDEROpenIDClient
             $hostname = $_SERVER['SERVER_ADDR'];
         }
 
+        $hostname = preg_replace('/:[0-9]+/', '', $hostname);
+
         $useport = ($protocol === 'https' && $port !== 443) || ($protocol === 'http' && $port !== 80);
 
-        $base_page_url = $protocol . '://' . $hostname . ($useport ? (':' . $port) : '');
+        $base_page_url = $protocol . '://' . $hostname . ($useport ? (':' . $port) : '') . $uri;
 
-        return $base_page_url . "/";
+        return $base_page_url;
     }
 
 
@@ -457,7 +481,7 @@ class IDEROpenIDClient
 
         $auth_endpoint = $this->getProviderConfigValue("authorization_endpoint");
         $response_type = "code";
-
+        
         // Save scope for future porpoise
         $_SESSION['openid_connect_scope'] = $this->scopes;
 
@@ -808,7 +832,8 @@ class IDEROpenIDClient
 
         // Timeout in seconds
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-
+        
+        // Force IPV4
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
 
         // Download the given URL, and return output

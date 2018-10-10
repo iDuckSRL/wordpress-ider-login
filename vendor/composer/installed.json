@@ -22,7 +22,7 @@
         },
         "time": "2018-10-02T18:36:08+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "IDERConnect\\": "src/"
