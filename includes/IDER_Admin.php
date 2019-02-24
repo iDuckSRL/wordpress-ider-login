@@ -138,6 +138,15 @@ class IDER_Admin
                         </td>
                     </tr>
 
+                    <tr valign="top">
+
+                        <th scope="row">Allow Login only to Administrator Users</th>
+                        <td>
+                            <input type="checkbox" name="<?php echo $this->option_name ?>[ider_admin_mode]"
+                                   value="1" <?php echo $options['ider_admin_mode'] == 1 ? 'checked="checked"' : ''; ?> />
+                        </td>
+                    </tr>
+
                 </table>
 
                 <h4><a href="#" id="advancedbtn">Advanced Options &raquo;</a></h4>

@@ -2,7 +2,7 @@
 Tags: IDer, login, sso, qrcode, openid, client, oauth2
 Requires at least: 4.6
 Tested up to: 4.9.8
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: Apache License, Version 2.0 or later
 License URI: http://directory.fsf.org/wiki/License:Apache2.0
 
@@ -70,3 +70,6 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 = 1.6 =
 * Updated OID Client
 * Fixed wrong CSS path
+
+= 1.6.1 =
+* Added flag "Allow Login only to Administrator Users"

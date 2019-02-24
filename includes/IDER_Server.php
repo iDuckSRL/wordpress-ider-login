@@ -23,6 +23,7 @@ class IDER_Server
         'client_secret' => '',
         'extra_scopes' => '',
         'login_form_button' => true,
+        'ider_admin_mode' => false,
         'welcome_page' => 'my-account/ider-profile',
         'button_css' => '',
         'fields_mapping' => '

@@ -45,6 +45,18 @@ class IDER_Callback
             // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
         }
 
+        // Store the user roles to check for admins later
+        $user_roles = array();
+
+        if($user->roles) {
+            $user_roles = $user->roles;
+        }
+
+        if((IDER_Server::get_option('ider_admin_mode') == 1) && !in_array('administrator', $user_roles)) {
+            IDER_Callback::access_denied("Only administrator can log-in via IDer.");
+        }
+        // --
+
         // if new, register first
         if (!$user->ID) {
             $user_id = self::_do_register($user_info);
@@ -103,6 +115,11 @@ class IDER_Callback
 
     private static function _update_usermeta($user_id, $userdata)
     {
+
+        if(!$user_id && !$userdata) {
+            return;
+        }
+
         $updated = [];
 
         foreach ($userdata as $key => $data) {
