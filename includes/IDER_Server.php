@@ -94,7 +94,17 @@ billing_email=email
      */
     public static function getIDerOpenIdClientIstance()
     {
-        \IDERConnect\IDEROpenIDClient::$IDERLogFile = IDER_PLUGIN_DIR . '/log/ider-connect.log';
+
+        // Log file placed into uploads folder.
+        $wpUploads = wp_upload_dir();
+
+        $filename =  $wpUploads['basedir'] . '/ider-logs/log/ider-connect.log';
+
+        if (!file_exists(dirname($filename))) {
+            mkdir(dirname($filename), 0777, true);
+        }
+
+        \IDERConnect\IDEROpenIDClient::$IDERLogFile = $filename;
 
         // Override the base URL with the WP one.
         \IDERConnect\IDEROpenIDClient::$BaseUrl = get_site_url();
