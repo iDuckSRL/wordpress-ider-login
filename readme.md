@@ -73,3 +73,4 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 
 = 1.6.1 =
 * Added flag "Allow Login only to Administrator Users"
+* Update ider-log path.
