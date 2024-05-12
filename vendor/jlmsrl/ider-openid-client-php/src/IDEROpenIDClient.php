@@ -14,13 +14,10 @@
 namespace IDERConnect;
 
 /**
- *
  * Please note this class stores nonces in $_SESSION['openid_connect_nonce']
- *
  */
 class IDEROpenIDClient
 {
-
     /**
      * Overridable base URL.
      */
@@ -127,16 +124,20 @@ class IDEROpenIDClient
     private $authParams = array();
 
     /**
+     * @var string 
+     */
+    private $redirectURL;
+
+    /**
      * @param $provider_url string optional
      *
      * @param $client_id string
      * @param $client_secret string
-     *
      */
     public function __construct($client_id, $client_secret, $scopes = null)
     {
         IDERHelpers::logRotate('======= IDer boot ======', static::$IDERLogFile);
-        IDERHelpers::logRotate('Called url: ' . $this->getRedirectURL(), static::$IDERLogFile);
+        IDERHelpers::logRotate('Called url: ' . $this->getRedirectURL(false), static::$IDERLogFile);
 
 
         $this->setProviderURL(static::$IDERServer);
@@ -165,13 +166,13 @@ class IDEROpenIDClient
 
         IDERHelpers::logRotate('Session start', static::$IDERLogFile);
 
-
         /**
          * Require the CURL and JSON PHP extentions to be installed
          */
         if (!function_exists('curl_init')) {
             throw new OpenIDConnectClientException('OpenIDConnect needs the CURL PHP extension.');
         }
+
         if (!function_exists('json_decode')) {
             throw new OpenIDConnectClientException('OpenIDConnect needs the JSON PHP extension.');
         }
@@ -189,7 +190,6 @@ class IDEROpenIDClient
         }
 
         IDERHelpers::logRotate('Libraries check passed', static::$IDERLogFile);
-
     }
 
     /**
@@ -209,8 +209,9 @@ class IDEROpenIDClient
     }
 
     /**
-     * @return bool
      * @throws OpenIDConnectClientException
+     * 
+     * @return bool
      */
     public function authenticate()
     {
@@ -288,7 +289,6 @@ class IDEROpenIDClient
             $this->requestAuthorization();
             return false;
         }
-
     }
 
     /**
@@ -297,6 +297,7 @@ class IDEROpenIDClient
     public function addScope($scope)
     {
         $this->scopes = array_merge($this->scopes, (array)$scope);
+
         IDERHelpers::logRotate('Scope set to: ' . implode(' ', $this->scopes), static::$IDERLogFile);
     }
 
@@ -308,6 +309,7 @@ class IDEROpenIDClient
         if ($addDefault && !is_null(self::$defaultScope)) {
             $this->scopes = [self::$defaultScope];
         }
+
         IDERHelpers::logRotate('Scope reset to: ' . implode(' ', $this->scopes), static::$IDERLogFile);
     }
 
@@ -335,7 +337,6 @@ class IDEROpenIDClient
      * @param $param
      * @throws OpenIDConnectClientException
      * @return string
-     *
      */
     private function getProviderConfigValue($param)
     {
@@ -357,7 +358,6 @@ class IDEROpenIDClient
         return $this->providerConfig[$param];
     }
 
-
     /**
      * @param $url Sets redirect URL for auth flow
      */
@@ -375,7 +375,7 @@ class IDEROpenIDClient
      *
      * @return string
      */
-    public function getRedirectURL()
+    public function getRedirectURL($overwritten = true)
     {
 
         // If the redirect URL has been set then return it.
@@ -384,22 +384,20 @@ class IDEROpenIDClient
         }
 
         // Other-wise return the URL of the current page
-        $currentUrl = $this->getBaseUrl() . substr($_SERVER['REQUEST_URI'], 1);
+        $currentUrl = $this->getBaseUrl($overwritten) . substr($_SERVER['REQUEST_URI'], 1);
 
         return $currentUrl;
     }
-
 
     /**
      * Used for arbitrary value generation for nonces and state
      *
      * @return string
      */
-    protected function getBaseUrl()
+    protected function getBaseUrl($overwritten = true)
     {
-
         // If the base URL is set, then use it.
-        if(static::$BaseUrl){
+        if(static::$BaseUrl && $overwritten){
             return rtrim(static::$BaseUrl, '/') . '/';
         }
 
@@ -452,9 +450,7 @@ class IDEROpenIDClient
         $base_page_url = $protocol . '://' . $hostname . ($useport ? (':' . $port) : '');
 
         return rtrim($base_page_url, '/') . '/';
-
     }
-
 
     /**
      * Used for arbitrary value generation for nonces and state
@@ -468,6 +464,7 @@ class IDEROpenIDClient
 
     /**
      * Start Here
+     * 
      * @return void
      */
     private function requestAuthorization()
@@ -495,7 +492,7 @@ class IDEROpenIDClient
 
         $auth_params = array_merge($this->authParams, array(
             'response_type' => $response_type,
-//            'response_mode' => "form_post",
+            // 'response_mode' => "form_post",
             'redirect_uri' => $this->getRedirectURL(),
             'client_id' => $this->getClientID(),
             'nonce' => $nonce,
@@ -518,7 +515,6 @@ class IDEROpenIDClient
         session_commit();
         $this->redirect($auth_endpoint);
     }
-
 
     /**
      * Requests ID and Access tokens
@@ -555,7 +551,6 @@ class IDEROpenIDClient
         $token_params = http_build_query($token_params, null, '&');
 
         return json_decode($this->fetchURL($token_endpoint, $token_params, $headers));
-
     }
 
     /**
@@ -605,7 +600,6 @@ class IDEROpenIDClient
             throw new OpenIDConnectClientException('Unable to find a key for RSA');
         }
     }
-
 
     /**
      * @param string $hashtype
@@ -727,7 +721,6 @@ class IDEROpenIDClient
      * updated_time    string    Time the End-User's information was last updated, represented as a RFC 3339 [RFC3339] datetime. For example, 2011-01-03T23:58:42+0000.
      *
      * @return mixed
-     *
      */
     public function requestUserInfo($attribute = null)
     {
@@ -914,7 +907,6 @@ class IDEROpenIDClient
         $this->clientID = $clientID;
     }
 
-
     /**
      * Dynamic registration
      *
@@ -951,7 +943,6 @@ class IDEROpenIDClient
             throw new OpenIDConnectClientException("Error registering:
                                                     Please contact the OpenID Connect provider and obtain a Client ID and Secret directly from them");
         }
-
     }
 
     /**

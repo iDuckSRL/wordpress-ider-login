@@ -2,7 +2,6 @@
 
 namespace IDERConnect;
 
-
 /**
  * IDER Helpers Class
  */
@@ -11,7 +10,7 @@ class IDERHelpers
 
     static function logRotate($text, $fullpath)
     {
-        $text = "[" . strftime("%Y-%m-%d %H:%M:%S") . "] " . $text . "\n";
+        $text = "[" . date("Y-m-d H:i:s") . "] " . $text . "\n";
 
         $fileparts = pathinfo($fullpath);
 
@@ -23,7 +22,6 @@ class IDERHelpers
         if (!is_dir($fileparts['dirname'])) {
             mkdir($dirname, true);
         }
-
 
         if (!file_exists($fullpath)) {
             touch($fullpath);
@@ -44,7 +42,6 @@ class IDERHelpers
             touch($fullpath);
             chmod($fullpath, 0666);
         }
-
 
         if (!is_writable($fullpath)) {
             error_log("Cannot open log file ($filename$ext)");
@@ -75,17 +72,16 @@ class IDERHelpers
      * alphabet".  This just replaces characters 62 and 63.  None of the
      * reference implementations seem to restore the padding if necessary,
      * but we'll do it anyway.
-     *
      */
     static function b64url2b64($base64url)
     {
         // "Shouldn't" be necessary, but why not
         $padding = strlen($base64url) % 4;
+
         if ($padding > 0) {
             $base64url .= str_repeat("=", 4 - $padding);
         }
+        
         return strtr($base64url, '-_', '+/');
     }
-
-
 }
