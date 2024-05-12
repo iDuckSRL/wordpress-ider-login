@@ -7,15 +7,13 @@
  * @subpackage  Ider
  * @author      Davide Lattanzio <plugins@jlm.srl>
  * @since       1.0
- *
  */
 
 class IDER_Helpers
 {
-
     static function logRotate($text, $filename, $ext = 'log')
     {
-        $text = "[" .strftime("%Y-%m-%d %H:%M:%S") . "] " . $text . "\n";
+        $text = "[" . date("Y-m-d H:i:s") . "] " . $text . "\n";
 
         // add basepath
         $filename = IDER_PLUGIN_DIR . 'logs/' . $filename;
