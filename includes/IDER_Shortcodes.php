@@ -19,12 +19,8 @@ class IDER_Shortcodes
         add_shortcode('ider_profile_summary', [__CLASS__, 'ider_profile_summary']);
     }
 
-
-
     static function ider_login_button_render($atts = []){
-
         echo self::ider_login_button($atts);
-
     }
 
     static function ider_login_button($atts = [])
@@ -44,22 +40,35 @@ class IDER_Shortcodes
 
         list($logintext, $logouttext) = explode('|', $a['text']);
 
+        $plugin_url = IDER_PLUGIN_URL;
+
         if (!is_user_logged_in()) {
-            return '<a class="' . $a['class'] . '" href="' . site_url('/iderbutton') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
-                    <img src="' . IDER_PLUGIN_URL . 'assets/images/ider_logo_white_32.png">' .
-            $logintext . '</a>';
+            $site_url = site_url('/iderbutton');
+
+            return <<<EOT
+                <a class="{$a['class']}" href="{$site_url}" title="{$a['title']}" target="{$a['target']}">
+                    <span class="ider-button-inside-wrapper">
+                        <img src="{$plugin_url}assets/images/ider_logo_white_128.png"> {$logintext}
+                    </span>
+                </a>
+            EOT;
         } else {
+            $wp_logout_url = wp_logout_url('/');
+
             if (!$a['loginonly']) {
-                return '<a class="' . $a['class'] . '" href="' . wp_logout_url('/') . '" title="' . $a['title'] . '" target="' . $a['target'] . '">
-                        <img src="' . IDER_PLUGIN_URL . 'assets/images/logo_ider.png">' . $logouttext . '</a>';
+                return <<<EOT
+                    <a class="{$a['class']}" href="{$wp_logout_url}" title="{$a['title']}" target="{$a['target']}">
+                        <span class="ider-button-inside-wrapper">
+                            <img src="{$plugin_url}assets/images/ider_logo_white_128.png" /> {$logouttext}
+                        </span>
+                    </a>
+                EOT;
             }
         }
     }
 
-
     static function ider_profile_summary($atts = [])
     {
-
         $a = shortcode_atts(array(
             'title' => 'Ider profile Summary ',
             'class' => 'button button-primary button-large',
