@@ -14,9 +14,7 @@ defined('ABSPATH') or die('No script kiddies please!');
 
 class IDER_Admin
 {
-
     protected $option_name = 'wposso_options';
-
 
     public static function init()
     {
@@ -25,9 +23,7 @@ class IDER_Admin
         add_action('admin_menu', array(new self, 'add_page'));
     }
 
-
     /**
-     * [register_admin_assets description]
      * @return void
      */
     public function register_admin_assets()
@@ -37,8 +33,7 @@ class IDER_Admin
     }
 
     /**
-     * [admin_init description]
-     * @return [type] [description]
+     * @return void
      */
     public function admin_init()
     {
@@ -46,7 +41,7 @@ class IDER_Admin
     }
 
     /**
-     * [add_page description]
+     * @return void
      */
     public function add_page()
     {
@@ -58,6 +53,7 @@ class IDER_Admin
 
     /**
      * loads the plugin styles and scripts into scope
+     * 
      * @return void
      */
     public function admin_head()
@@ -67,12 +63,14 @@ class IDER_Admin
     }
 
     /**
-     * [options_do_page description]
-     * @return [type] [description]
+     * Print the options page.
+     * 
+     * @return void
      */
     public function options_do_page()
     {
         $options = get_option($this->option_name);
+
         $this->admin_head();
         ?>
         <div class="wrap">
@@ -83,7 +81,8 @@ class IDER_Admin
                 <strong>Setting up IDer Client Account</strong>
                 <ol>
                     <li>Create a new client and set the Redirect URI (aka callback URL) to:
-                        <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong></li>
+                        <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong>
+                    </li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chose.</li>
                     <li>If you open a custom campaign and want your customer to land on a specific page, please configure it in the advanced setting "Campaigns Landing pages" using the format <strong>&lt;Campaign id&gt;=&lt;Landing Page&gt;</strong>
@@ -190,17 +189,19 @@ class IDER_Admin
     /**
      * Settings Validation
      *
-     * @param  [type] $input [description]
-     *
-     * @return [type]        [description]
+     * @param array $input 
+     * @return array
      */
     public function validate($input)
     {
-
         $input['client_id'] = trim($input['client_id']);
         $input['client_secret'] = trim($input['client_secret']);
         $input['extra_scopes'] = trim($input['extra_scopes']);
         $input['welcome_page'] = site_url(trim($input['welcome_page']));
+
+        // fix null being set in case of booleans 
+        $input['login_form_button'] = (boolean)$input['login_form_button'];
+        $input['ider_admin_mode'] = (boolean)$input['ider_admin_mode'];
 
         return $input;
     }
