@@ -25,3 +25,11 @@ table td input[type="password"] {
     width: 400px;
     height: 150px;
 }
+
+/* admin menu item */
+.toplevel_page_wposso_settings .wp-menu-image {
+    background-image: url(../images/ider_logo_white_128.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
+}

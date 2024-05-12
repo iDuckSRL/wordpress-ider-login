@@ -26,7 +26,7 @@
     background-color: #3498db;
     text-decoration: none !important;
     color: #fff !important;
-    border-radius: 9px !important;
+    border-radius: 3px !important;
     padding: 12px 12px 10px 12px;
     font-size: 18px;
     display: inline-block;
@@ -41,10 +41,27 @@
     border: 0;
 }
 
+.ider-login .ider-button-inside-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.ider-login .ider-button-inside-wrapper img {
+    width: 20px;
+    height: 20px;
+}
+
+.ider-login img {
+    margin-right: 5px;
+}
+
 #loginform .ider-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     clear: both;
     float: none;
-    display: block;
     margin-bottom: 10px;
     padding: 6px 0;
 }
