@@ -15,7 +15,6 @@ class IDER_Callback
 
     static function handler($user_info)
     {
-
         $user_info = IDER_UserInfoManager::normalize($user_info);
 
         $handled = false;
@@ -28,14 +27,18 @@ class IDER_Callback
         }
     }
 
-
     // register or authenticate user
     static function defaultHandler($user_info)
     {
-
         // check if user exists by email
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
         $user = get_user_by('email', $user_info->email);
+
+        if (!$user) {
+            IDER_Callback::access_denied("User unable to login.");
+            
+            return;
+        }
 
         // check if user exists by sub
         if (!$user->ID) {
@@ -112,10 +115,8 @@ class IDER_Callback
 
     }
 
-
     private static function _update_usermeta($user_id, $userdata)
     {
-
         if(!$user_id && !$userdata) {
             return;
         }
@@ -148,10 +149,8 @@ class IDER_Callback
         return $updated;
     }
 
-
     private static function _do_register($user_info)
     {
-
         // Does not have an account. Register and then log the user in
         $random_password = wp_generate_password($length = 12, $include_standard_special_chars = false);
         $user_id = wp_create_user($user_info->email, $random_password, $user_info->email);
@@ -164,10 +163,8 @@ class IDER_Callback
         return $user_id;
     }
 
-
     private static function _login($user)
     {
-
         // User ID 1 is not allowed
         if ('1' === $user->ID) {
             wp_die('For security reasons, admin cannot login via IDer.');
@@ -179,8 +176,5 @@ class IDER_Callback
             wp_set_current_user($user->ID, $user->user_login);
             wp_set_auth_cookie($user->ID);
         }
-
     }
-
-
 }
