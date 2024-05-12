@@ -1,14 +1,15 @@
 <?php
+
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://www.ider.com
- * Version: 1.6.1
+ * Version: 1.7
  * Description: Provides Single Sign On via IDer Identity Server
- * Author: JLM srl
- * Author URI: https://jlm.srl
+ * Author: iDuck SRL
+ * Author URI: https://www.ider.com
  * License: GPL2
  *
- * This program is GLP but; you can redistribute it and/or modify
+ * This program is GPL but; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -16,7 +17,6 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of.
  */
-
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -33,7 +33,7 @@ if (!defined('IDER_PLUGIN_URL')) {
 }
 
 if (!defined('IDER_CLIENT_VERSION')) {
-    define('IDER_CLIENT_VERSION', '1.6.1');
+    define('IDER_CLIENT_VERSION', '1.7');
 }
 
 if (!defined('IDER_SITE_DOMAIN')) {
@@ -55,10 +55,8 @@ if (defined('IDER_SERVER')) {
 // bootstrap the plugin
 IDER_Server::instance();
 
-
 /* If you need customization (ie: field map) you can write below */
 add_filter('ider_fields_map', function ($fields) {
-
     $options = get_option("wposso_options");
     $fields_mapping = $options["fields_mapping"];
 
@@ -69,10 +67,8 @@ add_filter('ider_fields_map', function ($fields) {
     return $fields;
 });
 
-
 // If you need custom data handler you can hook here.
 add_filter('before_callback_handler', function ($user_info, $scopes) {
-
     $handled = false;
     if (in_array('yourscope', $scopes)) {
         // do something...
@@ -84,10 +80,8 @@ add_filter('before_callback_handler', function ($user_info, $scopes) {
 
 }, 10, 2);
 
-
 // If you need custom data handler you can hook here. $handler = true will prevent the default action
 add_filter('after_callback_handler', function ($user_info, $scopes) {
-
     if (in_array('yourscope', $scopes)) {
         // do something...
     }
@@ -108,9 +102,3 @@ add_filter('after_callback_handler', function ($user_info, $scopes) {
     }
 
 }, 10, 2);
-
-
-
-
-
-
