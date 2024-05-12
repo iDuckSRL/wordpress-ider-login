@@ -30,6 +30,22 @@ class IDER_Admin
     {
         wp_register_style('wposso_admin', plugins_url('../assets/css/admin.css', __FILE__));
         wp_register_script('wposso_admin', plugins_url('../assets/js/admin.js', __FILE__));
+
+        $this->register_dynamic_css();
+        $this->admin_head();
+    }
+
+    /**
+     * Add dynamic CSS for new wp-menu-image system.
+     * 
+     * @return void
+     */
+    public function register_dynamic_css() {
+        $css = '.toplevel_page_wposso_settings .wp-menu-image {';
+        $css .= 'background-image: url("' . IDER_PLUGIN_URL . 'assets/images/ider_logo_white_128.png");';
+        $css .= '}';
+
+        wp_add_inline_style('wposso_admin', $css);
     }
 
     /**
@@ -70,8 +86,6 @@ class IDER_Admin
     public function options_do_page()
     {
         $options = get_option($this->option_name);
-
-        $this->admin_head();
         ?>
         <div class="wrap">
             <h2>IDer Single Sign On Configuration</h2>
