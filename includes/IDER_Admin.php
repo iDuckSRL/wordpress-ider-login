@@ -64,7 +64,7 @@ class IDER_Admin
         add_menu_page('IDer Login', 'IDer Login', 'manage_options', 'wposso_settings', array(
             $this,
             'options_do_page'
-        ), IDER_PLUGIN_URL . 'assets/images/logo_ider.png');
+        ), 'none');
     }
 
     /**

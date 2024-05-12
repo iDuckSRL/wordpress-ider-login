@@ -1,8 +1,9 @@
-(function($){
-    $('#advancedbtn').on('click', function(e) {
-        e.preventDefault();
+if (typeof jQuery !== 'undefined') {
+    jQuery(function() {
+        jQuery('#advancedbtn').on('click', function(e) {
+            e.preventDefault();
 
-        $('#advancedopts').fadeToggle();
-    })
-
-})(jQuery);
+            jQuery('#advancedopts').fadeToggle();
+        })
+    });
+}
