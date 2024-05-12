@@ -8,9 +8,9 @@ defined('ABSPATH') or die('No script kiddies please!');
  * @author Justin Greer <justin@justin-greer.com>
  * @package WP Single Sign On Client
  */
+
 class IDER_Server
 {
-
     /** Server Instance */
     public static $_instance = null;
 
@@ -25,6 +25,7 @@ class IDER_Server
         'login_form_button' => true,
         'ider_admin_mode' => false,
         'welcome_page' => 'my-account/ider-profile',
+        'landing_pages' => '',
         'button_css' => '',
         'fields_mapping' => '
 ider_sub=sub
@@ -51,12 +52,10 @@ billing_phone=phone_number
 billing_email=email
 ');
 
-
     function __construct()
     {
         self::init();
     }
-
 
     static function init()
     {
@@ -72,13 +71,12 @@ billing_email=email
 
         self::register_activation_hooks();
         self::includes();
-
     }
 
     // Options lazy load
     static function get_option($option = null)
     {
-        self::$options = get_option('wposso_options');;
+        self::$options = get_option('wposso_options', array());
 
         if ($option === null) {
             return self::$options;
@@ -150,7 +148,7 @@ billing_email=email
      * Plugin Initializer
      */
     public static function register_activation_hooks()
-    {
+    {   
         register_activation_hook(IDER_PLUGIN_FILE, array(__CLASS__, 'setup'));
         register_activation_hook(IDER_PLUGIN_FILE, array(__CLASS__, 'upgrade'));
     }
@@ -184,16 +182,13 @@ billing_email=email
         IDER_Widget::init();
         IDER_Rewrites::init();
         IDER_WooPage::init();
-
     }
-
 
     /**
      * Plugin Setup
      */
-    public function setup()
+    public static function setup()
     {
-
         $options = self::$default_settings;
 
         // if woocommerce then set the welcome page to user profile
@@ -204,18 +199,12 @@ billing_email=email
         }
 
         update_option("wposso_options", $options);
-
     }
-
 
     /**
      * Plugin Setup
      */
-    public function upgrade()
-    {
-
-    }
-
+    public static function upgrade() {}
 
     private static function autoloader($class)
     {
@@ -237,7 +226,6 @@ billing_email=email
         return false;
     }
 
-
     private static function loadPackage($dir)
     {
         $composer = json_decode(file_get_contents("$dir/composer.json"), 1);
@@ -256,6 +244,4 @@ billing_email=email
             });
         }
     }
-
 }
-
