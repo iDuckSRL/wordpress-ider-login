@@ -29,7 +29,7 @@ class IDER_Admin
     public function register_admin_assets()
     {
         wp_register_style('wposso_admin', plugins_url('../assets/css/admin.css', __FILE__));
-        wp_register_script('wposso_admin', plugins_url('../assets/js/admin.js', __FILE__));
+        wp_register_script('wposso_admin', plugins_url('../assets/js/admin.js', __FILE__), array('jquery'));
 
         $this->register_dynamic_css();
         $this->admin_head();
