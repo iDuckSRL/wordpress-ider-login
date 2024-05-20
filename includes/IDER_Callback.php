@@ -41,7 +41,7 @@ class IDER_Callback
         }
 
         // check if user exists by sub
-        if (!$user || !$user->ID) {
+        if (!$user->ID) {
             $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
             $user = @$user[0];
 
@@ -61,7 +61,7 @@ class IDER_Callback
         // --
 
         // if new, register first
-        if (!$user->ID) {
+        if (!$user || !$user->ID) {
             $user_id = self::_do_register($user_info);
 
             $user = get_user_by('id', $user_id);
