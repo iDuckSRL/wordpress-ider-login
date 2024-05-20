@@ -3,7 +3,7 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://www.ider.com
- * Version: 1.7
+ * Version: 2.0
  * Description: Provides Single Sign On via IDer Identity Server
  * Author: iDuck SRL
  * Author URI: https://www.ider.com
@@ -33,7 +33,7 @@ if (!defined('IDER_PLUGIN_URL')) {
 }
 
 if (!defined('IDER_CLIENT_VERSION')) {
-    define('IDER_CLIENT_VERSION', '1.7');
+    define('IDER_CLIENT_VERSION', '2.0');
 }
 
 if (!defined('IDER_SITE_DOMAIN')) {

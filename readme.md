@@ -75,7 +75,7 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 * Added flag "Allow Login only to Administrator Users"
 * Update ider-log path.
 
-= 1.7 =
+= 2.0 =
 * Removed deprecations.
 * Added support to newer Wordpress versions.
 * Improve UI assets.
