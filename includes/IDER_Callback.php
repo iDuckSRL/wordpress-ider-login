@@ -34,12 +34,6 @@ class IDER_Callback
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
         $user = get_user_by('email', $user_info->email);
 
-        if (!$user) {
-            IDER_Callback::access_denied("User unable to login.");
-            
-            return;
-        }
-
         // check if user exists by sub
         if (!$user->ID) {
             $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
