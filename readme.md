@@ -2,7 +2,7 @@
 Tags: IDer, login, sso, qrcode, openid, client, oauth2
 Requires at least: 4.6
 Tested up to: 6.5.3
-Stable tag: 1.7
+Stable tag: 2.0
 License: Apache License, Version 2.0 or later
 License URI: http://directory.fsf.org/wiki/License:Apache2.0
 
