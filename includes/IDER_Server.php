@@ -44,8 +44,6 @@ billing_city=address.locality
 billing_state=address.region
 billing_postcode=address.postal_code
 billing_country=address.country
-
-# billing tmp
 billing_first_name=given_name
 billing_last_name=family_name
 billing_company=
@@ -59,13 +57,15 @@ shipping_city=address.locality
 shipping_state=address.region
 shipping_postcode=address.postal_code
 shipping_country=address.country
-
-# shipping tmp
 shipping_first_name=given_name
 shipping_last_name=family_name
 shipping_company=
 shipping_phone=phone_number
 shipping_email=email
+
+# miscellaneous examples
+preferred_short_size=shirt_size
+preferred_shoes_size=shoe_size
 ');
 
     function __construct()
