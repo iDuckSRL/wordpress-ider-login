@@ -41,7 +41,7 @@ class IDER_Admin
      * @return void
      */
     public function register_dynamic_css() {
-        $css = '.toplevel_page_wposso_settings .wp-menu-image {';
+        $css = '.toplevel_page_wposso_settings > .wp-menu-image {';
         $css .= 'background-image: url("' . IDER_PLUGIN_URL . 'assets/images/ider_logo_white_128.png");';
         $css .= '}';
 
