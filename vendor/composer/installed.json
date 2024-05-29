@@ -2,17 +2,17 @@
         "packages": [
                 {
                         "name": "jlmsrl/ider-openid-client-php",
-                        "version": "1.1.3",
-                        "version_normalized": "1.1.3.0",
+                        "version": "1.1.4",
+                        "version_normalized": "1.1.4.0",
                         "source": {
                                 "type": "git",
-                                "url": "https://github.com/iDUCKsrl/ider-openid-client-php.git",
-                                "reference": "208b926e77c4ccc200da5acbd5e1bfc8bebc361b"
+                                "url": "https://github.com/iDuckSRL/ider-openid-client-php.git",
+                                "reference": "a7c1603c1084b83f87cc0d94f5194621e4950f53"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/iDUCKsrl/ider-openid-client-php/zipball/208b926e77c4ccc200da5acbd5e1bfc8bebc361b",
-                                "reference": "208b926e77c4ccc200da5acbd5e1bfc8bebc361b",
+                                "url": "https://api.github.com/repos/iDuckSRL/ider-openid-client-php/zipball/a7c1603c1084b83f87cc0d94f5194621e4950f53",
+                                "reference": "a7c1603c1084b83f87cc0d94f5194621e4950f53",
                                 "shasum": ""
                         },
                         "require": {
@@ -21,7 +21,7 @@
                                 "php": ">=5.3",
                                 "phpseclib/phpseclib": "^2.0.47"
                         },
-                        "time": "2024-05-12T03:59:48+00:00",
+                        "time": "2024-05-29T23:09:00+00:00",
                         "type": "library",
                         "installation-source": "dist",
                         "autoload": {
@@ -42,8 +42,8 @@
                         ],
                         "description": "IDER OpenID Generic Client for PHP",
                         "support": {
-                                "issues": "https://github.com/iDUCKsrl/ider-openid-client-php/issues",
-                                "source": "https://github.com/iDUCKsrl/ider-openid-client-php/tree/v1.1.3"
+                                "issues": "https://github.com/iDuckSRL/ider-openid-client-php/issues",
+                                "source": "https://github.com/iDuckSRL/ider-openid-client-php/tree/v1.1.4"
                         },
                         "install-path": "../jlmsrl/ider-openid-client-php"
                 },

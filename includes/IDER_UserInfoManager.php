@@ -1,5 +1,7 @@
 <?php
 
+use IDERConnect\IDERHelpers;
+
 /**
  * Function to transform and map json to local fields.
  *
@@ -9,26 +11,23 @@
  * @since       1.0
  *
  */
-
 class IDER_UserInfoManager
 {
-
-
     static function normalize($user_info)
     {
-        $user_info = (array)$user_info;
+        $user_info = IDERHelpers::toArray($user_info);
+        $user_info = IDERHelpers::remapFields($user_info);
 
         // explode json packed claims
-        $user_info = self::_checkJsonfields($user_info);
+        $user_info = self::_flattenFields($user_info);
 
         // remap openID fields into local fields
         $user_info = self::_fieldsMap($user_info);
 
-        $user_info = (object)$user_info;
+        $user_info = (object) $user_info;
 
         return $user_info;
     }
-
 
     private static function _fieldsMap($userdata)
     {
@@ -46,26 +45,23 @@ class IDER_UserInfoManager
         return $userdata;
     }
 
-
-    private static function _checkJsonfields($userdata)
+    private static function _flattenFields($userdata)
     {
+        $result = [];
 
-        foreach ($userdata as $key => $claim) {
-            if (IDER_Helpers::isJSON($claim)) {
-                $subclaims = json_decode($claim);
-
-                // break down the claim
-                foreach ($subclaims as $subkey => $subclaim) {
-                    $userdata[$key . '.' . $subkey] = $subclaim;
+        $flatten = function ($data, $parentKey = '') use (&$flatten, &$result) {
+            foreach ($data as $key => $value) {
+                $newKey = $parentKey === '' ? $key : $parentKey . '.' . $key;
+                if (is_array($value) || is_object($value)) {
+                    $flatten((array)$value, $newKey);
+                } else {
+                    $result[$newKey] = $value;
                 }
-
-                // delete the original claim
-                unset($userdata[$key]);
             }
-        }
-
-        return $userdata;
+        };
+    
+        $flatten($userdata);
+    
+        return $result;
     }
-
-
 }
