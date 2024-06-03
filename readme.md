@@ -79,3 +79,6 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 * Removed deprecations.
 * Added support to newer Wordpress versions.
 * Improve UI assets.
+
+= 2.1 =
+* Improve address resolution.
