@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "jlmsrl/ider-openid-client-php",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iDuckSRL/ider-openid-client-php.git",
-                "reference": "a7c1603c1084b83f87cc0d94f5194621e4950f53"
+                "reference": "b34029d7aea772107278308828f3e6cd8b9d7827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iDuckSRL/ider-openid-client-php/zipball/a7c1603c1084b83f87cc0d94f5194621e4950f53",
-                "reference": "a7c1603c1084b83f87cc0d94f5194621e4950f53",
+                "url": "https://api.github.com/repos/iDuckSRL/ider-openid-client-php/zipball/b34029d7aea772107278308828f3e6cd8b9d7827",
+                "reference": "b34029d7aea772107278308828f3e6cd8b9d7827",
                 "shasum": ""
             },
             "require": {
@@ -46,22 +46,23 @@
             "description": "IDER OpenID Generic Client for PHP",
             "support": {
                 "issues": "https://github.com/iDuckSRL/ider-openid-client-php/issues",
-                "source": "https://github.com/iDuckSRL/ider-openid-client-php/tree/v1.1.4"
+                "source": "https://github.com/iDuckSRL/ider-openid-client-php/tree/v1.1.5"
             },
-            "time": "2024-05-29T23:09:00+00:00"
+            "abandoned": "iducksrl/ider-openid-client-php",
+            "time": "2024-06-22T14:17:57+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.47",
+            "version": "2.0.48",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "b7d7d90ee7df7f33a664b4aea32d50a305d35adb"
+                "reference": "eaa7be704b8b93a6913b69eb7f645a59d7731b61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/b7d7d90ee7df7f33a664b4aea32d50a305d35adb",
-                "reference": "b7d7d90ee7df7f33a664b4aea32d50a305d35adb",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/eaa7be704b8b93a6913b69eb7f645a59d7731b61",
+                "reference": "eaa7be704b8b93a6913b69eb7f645a59d7731b61",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +143,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.47"
+                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.48"
             },
             "funding": [
                 {
@@ -158,16 +159,16 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-26T04:55:38+00:00"
+            "time": "2024-12-14T21:03:54+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
