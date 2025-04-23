@@ -510,7 +510,7 @@ class IDEROpenIDClient
             $auth_params = array_merge($auth_params, array('response_type' => implode(' ', $this->responseTypes)));
         }
 
-        $auth_endpoint .= '?' . http_build_query($auth_params, null, '&');
+        $auth_endpoint .= '?' . http_build_query($auth_params, '', '&');
 
         session_commit();
         $this->redirect($auth_endpoint);
@@ -548,7 +548,7 @@ class IDEROpenIDClient
         }
 
         // Convert token params to string format
-        $token_params = http_build_query($token_params, null, '&');
+        $token_params = http_build_query($token_params, '', '&');
 
         return json_decode($this->fetchURL($token_endpoint, $token_params, $headers));
     }
@@ -573,7 +573,7 @@ class IDEROpenIDClient
         );
 
         // Convert token params to string format
-        $token_params = http_build_query($token_params, null, '&');
+        $token_params = http_build_query($token_params, '', '&');
 
         $json = json_decode($this->fetchURL($token_endpoint, $token_params));
         $this->refreshToken = $json->refresh_token;
