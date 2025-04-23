@@ -90,6 +90,7 @@ class IDER_Callback
         wp_enqueue_style('ider-css', IDER_PLUGIN_URL . 'assets/css/general.css', false, IDER_CLIENT_VERSION, 'all');
 
         $error_msg = sanitize_text_field($errormsg);
+        $mainmsg = esc_html($mainmsg);
         get_header();
         echo '<div class="container">';
         echo '<div class="row">';
@@ -99,7 +100,7 @@ class IDER_Callback
         echo '</header>';
         echo '<div class="errordiv">';
         echo '<p>Please try later.</p>';
-        echo '<small>' . ucwords(str_replace('_', ' ', $error_msg)) . ' </small>';
+        echo '<small>' . esc_html(ucwords(str_replace('_', ' ', $error_msg))) . ' </small>';
         echo '</div>';
         echo '</div>';
         echo '</div>';

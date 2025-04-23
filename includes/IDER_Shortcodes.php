@@ -44,9 +44,15 @@ class IDER_Shortcodes
 
         if (!is_user_logged_in()) {
             $site_url = site_url('/iderbutton');
+            $class = esc_attr($a['class']);
+            $title = esc_attr($a['title']);
+            $target = esc_attr($a['target']);
+            $logintext = esc_html($logintext);
+            $plugin_url = esc_url($plugin_url);
+            $site_url = esc_url($site_url);
 
             return <<<EOT
-                <a class="{$a['class']}" href="{$site_url}" title="{$a['title']}" target="{$a['target']}">
+                <a class="{$class}" href="{$site_url}" title="{$title}" target="{$target}">
                     <span class="ider-button-inside-wrapper">
                         <img src="{$plugin_url}assets/images/ider_logo_white_128.png"> {$logintext}
                     </span>
@@ -54,10 +60,16 @@ class IDER_Shortcodes
             EOT;
         } else {
             $wp_logout_url = wp_logout_url('/');
+            $class = esc_attr($a['class']);
+            $title = esc_attr($a['title']);
+            $target = esc_attr($a['target']);
+            $logouttext = esc_html($logouttext);
+            $plugin_url = esc_url($plugin_url);
+            $wp_logout_url = esc_url($wp_logout_url);
 
             if (!$a['loginonly']) {
                 return <<<EOT
-                    <a class="{$a['class']}" href="{$wp_logout_url}" title="{$a['title']}" target="{$a['target']}">
+                    <a class="{$class}" href="{$wp_logout_url}" title="{$title}" target="{$target}">
                         <span class="ider-button-inside-wrapper">
                             <img src="{$plugin_url}assets/images/ider_logo_white_128.png" /> {$logouttext}
                         </span>
@@ -97,9 +109,9 @@ class IDER_Shortcodes
             // skip shipping fields
             if (preg_match("/^shipping_(.*)/i", $localfield)) continue;
 
-            $tbody .= '<tr class="' . (in_array($localfield, $updated_fields) ? 'warning' : '') . '"><th class="textright">' . ucfirst(str_replace(['-', '_'], ' ', $localfield)) . '</th><td>';
+            $tbody .= '<tr class="' . (in_array($localfield, $updated_fields) ? 'warning' : '') . '"><th class="textright">' . esc_html(ucfirst(str_replace(['-', '_'], ' ', $localfield))) . '</th><td>';
             if ($usermetas[$localfield]) {
-                $tbody .= $usermetas[$localfield][0];
+                $tbody .= esc_html($usermetas[$localfield][0]);
             } else {
                 $tbody .= '--';
             }
@@ -107,12 +119,12 @@ class IDER_Shortcodes
         }
 
         $email_mismatch = '<div class="alert alert-warning">
-                           <strong>Warning!</strong> Your local email (' . $user->user_email . ') is different than your IDer email (' . ($usermetas['email'][0] ?: 'none') . ').
+                           <strong>Warning!</strong> Your local email (' . esc_html($user->user_email) . ') is different than your IDer email (' . esc_html($usermetas['email'][0] ?: 'none') . ').
                            </div>';
 
-        $table = '<h3>Welcome ' . $usermetas['first_name'][0] . ' ' . $usermetas['last_name'][0] . '</h3>';
+        $table = '<h3>Welcome ' . esc_html($usermetas['first_name'][0]) . ' ' . esc_html($usermetas['last_name'][0]) . '</h3>';
         $table .= '<h4>You have been authenticated via IDer<sup>&copy;</sup> system.</h4>';
-        $table .= $usermetas['email'][0] == $user->user_email ? '' : $email_mismatch;
+        $table .= sanitize_email($usermetas['email'][0]) == sanitize_email($user->user_email) ? '' : $email_mismatch;
         $table .= '<table class="table table-condensed">';
         $table .= '<tbody>' . $tbody . '</tbody>';
         $table .= '</table>';
