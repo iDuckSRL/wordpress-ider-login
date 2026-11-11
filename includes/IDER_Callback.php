@@ -19,7 +19,7 @@ class IDER_Callback
 
         $handled = false;
         // pass the controll to user defined functions
-        $handled = apply_filters('before_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
+        $handled = apply_filters('before_callback_handler', $user_info, self::_scopes());
 
         // if user function hadn't been exclusive let's resume the standard flow
         if (!$handled) {
@@ -32,12 +32,19 @@ class IDER_Callback
     {
         // check if user exists by email
         // ps: if user uses same email on a new IDer profile the sub will be updated on the old profie
-        $user = get_user_by('email', $user_info->email);
+        $email = isset($user_info->email) ? sanitize_email($user_info->email) : '';
+        $sub = isset($user_info->sub) ? (string) $user_info->sub : '';
+
+        if ($email === '' || $sub === '') {
+            IDER_Callback::access_denied("Missing user data from IDer.");
+        }
+
+        $user = get_user_by('email', $email);
 
         // check if user exists by sub
-        if (!$user->ID) {
-            $user = get_users(['meta_key' => 'ider_sub', 'meta_value' => $user_info->sub]);
-            $user = @$user[0];
+        if (!$user || !$user->ID) {
+            $users = get_users(['meta_key' => 'ider_sub', 'meta_value' => $sub, 'number' => 1]);
+            $user = $users ? $users[0] : false;
 
             // TODO: leverage future endpoint to check which side changed the email: local->no access and error msg, remote->update email
         }
@@ -45,8 +52,8 @@ class IDER_Callback
         // Store the user roles to check for admins later
         $user_roles = array();
 
-        if($user->roles) {
-            $user_roles = $user->roles;
+        if ($user && !empty($user->roles)) {
+            $user_roles = (array) $user->roles;
         }
 
         if((IDER_Server::get_option('ider_admin_mode') == 1) && !in_array('administrator', $user_roles)) {
@@ -58,21 +65,25 @@ class IDER_Callback
         if (!$user || !$user->ID) {
             $user_id = self::_do_register($user_info);
 
+            if (is_wp_error($user_id)) {
+                IDER_Callback::access_denied($user_id->get_error_message());
+            }
+
             $user = get_user_by('id', $user_id);
         }
 
         // Log the User In
         self::_login($user);
-        do_action('wp_login', $user_info->email, $user);
+        do_action('wp_login', $user->user_login, $user);
 
         // update user data
         self::_update_usermeta($user->ID, $user_info);
 
         if (is_user_logged_in()) {
             // pass the controll to user defined functions and landing pages
-            apply_filters('after_callback_handler', $user_info, $_SESSION['openid_connect_scope']);
+            apply_filters('after_callback_handler', $user_info, self::_scopes());
 
-            wp_redirect(IDER_Server::get_option('welcome_page'));
+            wp_redirect(IDER_Server::get_option('welcome_page') ?: home_url());
 
             exit;
         }
@@ -118,7 +129,21 @@ class IDER_Callback
 
         $updated = [];
 
+        // Never let remote data overwrite WordPress internals (roles, capabilities, sessions...).
+        global $wpdb;
+        $protected = array(
+            $wpdb->get_blog_prefix() . 'capabilities',
+            $wpdb->get_blog_prefix() . 'user_level',
+            'session_tokens',
+            'last_updated_fields',
+        );
+
         foreach ($userdata as $key => $data) {
+            $key = (string) $key;
+            if ($key === '' || in_array($key, $protected, true) || strpos($key, $wpdb->base_prefix) === 0) {
+                continue;
+            }
+
             // TMP: override wrong format
             // if (in_array($key, array('billing_country', 'shipping_country'))) $data = 'IT';
 
@@ -144,11 +169,23 @@ class IDER_Callback
         return $updated;
     }
 
+    // Scopes requested in this login (set by the OpenID client in the session).
+    private static function _scopes()
+    {
+        return isset($_SESSION['openid_connect_scope']) ? (array) $_SESSION['openid_connect_scope'] : array();
+    }
+
     private static function _do_register($user_info)
     {
         // Does not have an account. Register and then log the user in
-        $random_password = wp_generate_password($length = 12, $include_standard_special_chars = false);
-        $user_id = wp_create_user($user_info->email, $random_password, $user_info->email);
+        $random_password = wp_generate_password(24, true);
+        $email = sanitize_email($user_info->email);
+        $user_id = wp_create_user($email, $random_password, $email);
+
+        if (is_wp_error($user_id)) {
+            return $user_id;
+        }
+
         wp_clear_auth_cookie();
         wp_set_current_user($user_id);
         wp_set_auth_cookie($user_id);

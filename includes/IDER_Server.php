@@ -92,11 +92,11 @@ preferred_shoes_size=shoe_size
     // Options lazy load
     static function get_option($option = null)
     {
-        self::$options = get_option('wposso_options', array());
+        self::$options = (array) get_option('wposso_options', array());
 
         if ($option === null) {
             return self::$options;
-        } else if (@array_key_exists($option, self::$options)) {
+        } else if (array_key_exists($option, self::$options)) {
             return self::$options[$option];
         } else {
             return null;
@@ -114,22 +114,49 @@ preferred_shoes_size=shoe_size
 
         $filename =  $wpUploads['basedir'] . '/ider-logs/log/ider-connect.log';
 
-        if (!file_exists(dirname($filename))) {
-            mkdir(dirname($filename), 0777, true);
-        }
+        self::protect_log_dir(dirname($filename));
 
         \IDERConnect\IDEROpenIDClient::$IDERLogFile = $filename;
 
         // Override the base URL with the WP one.
         \IDERConnect\IDEROpenIDClient::$BaseUrl = get_site_url();
 
-        $options = get_option('wposso_options');
+        $options = wp_parse_args((array) get_option('wposso_options', array()), array(
+            'client_id' => '',
+            'client_secret' => '',
+            'extra_scopes' => '',
+        ));
 
         if (is_null(\IDERConnect\IDEROpenIDClient::$_instance)) {
             \IDERConnect\IDEROpenIDClient::$_instance = new \IDERConnect\IDEROpenIDClient($options['client_id'], $options['client_secret'], $options['extra_scopes']);
+
+            // Always verify the IDer server TLS certificate (the library skips the check without a CA file).
+            $ca_bundle = ABSPATH . WPINC . '/certificates/ca-bundle.crt';
+            if (file_exists($ca_bundle)) {
+                \IDERConnect\IDEROpenIDClient::$_instance->setCertPath($ca_bundle);
+            }
         }
 
         return \IDERConnect\IDEROpenIDClient::$_instance;
+    }
+
+    /**
+     * Create the log folder and block direct web access to it.
+     */
+    private static function protect_log_dir($dir)
+    {
+        if (!file_exists($dir)) {
+            wp_mkdir_p($dir);
+        }
+
+        foreach (array($dir, dirname($dir)) as $folder) {
+            if (!file_exists($folder . '/index.php')) {
+                @file_put_contents($folder . '/index.php', "<?php\n// Silence is golden.\n");
+            }
+            if (!file_exists($folder . '/.htaccess')) {
+                @file_put_contents($folder . '/.htaccess', "<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order allow,deny\n    Deny from all\n</IfModule>\n");
+            }
+        }
     }
 
 
@@ -214,13 +241,21 @@ preferred_shoes_size=shoe_size
             $options['welcome_page'] = home_url();
         }
 
-        update_option("wposso_options", $options);
+        // keep the settings of a previous installation
+        if (false === get_option("wposso_options", false)) {
+            update_option("wposso_options", $options);
+        }
+
+        delete_option('ider_rewrite_version');
     }
 
     /**
-     * Plugin Setup
+     * Plugin Upgrade
      */
-    public static function upgrade() {}
+    public static function upgrade()
+    {
+        delete_option('ider_rewrite_version');
+    }
 
     private static function autoloader($class)
     {
