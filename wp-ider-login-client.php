@@ -3,10 +3,13 @@
 /**
  * Plugin Name: IDer Login
  * Plugin URI: https://www.ider.com
- * Version: 2.2
+ * Version: 2.3
  * Description: Provides Single Sign On via IDer Identity Server
  * Author: iDuck SRL
  * Author URI: https://www.ider.com
+ * Requires at least: 5.0
+ * Requires PHP: 7.4
+ * Tested up to: 7.1
  * License: GPL2
  *
  * This program is GPL but; you can redistribute it and/or modify
@@ -33,11 +36,13 @@ if (!defined('IDER_PLUGIN_URL')) {
 }
 
 if (!defined('IDER_CLIENT_VERSION')) {
-    define('IDER_CLIENT_VERSION', '2.2');
+    define('IDER_CLIENT_VERSION', '2.3');
 }
 
 if (!defined('IDER_SITE_DOMAIN')) {
-    define('IDER_SITE_DOMAIN', implode(".", array_reverse(array_slice(array_reverse(explode(".", $_SERVER['HTTP_HOST'])), 0, 2))));
+    $ider_host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : (string) wp_parse_url(home_url(), PHP_URL_HOST);
+    define('IDER_SITE_DOMAIN', implode(".", array_reverse(array_slice(array_reverse(explode(".", $ider_host)), 0, 2))));
+    unset($ider_host);
 }
 
 // Enable shortcodes in text widgets
@@ -57,8 +62,8 @@ IDER_Server::instance();
 
 /* If you need customization (ie: field map) you can write below */
 add_filter('ider_fields_map', function ($fields) {
-    $options = get_option("wposso_options");
-    $fields_mapping = $options["fields_mapping"];
+    $options = (array) get_option("wposso_options", array());
+    $fields_mapping = isset($options["fields_mapping"]) ? (string) $options["fields_mapping"] : '';
 
     preg_match_all('/^(?!#)(\w+)=([\w\.]+)/m', $fields_mapping, $matches);
 
@@ -86,17 +91,17 @@ add_filter('after_callback_handler', function ($user_info, $scopes) {
         // do something...
     }
 
-    $options = get_option("wposso_options");
-    $landing_pages = $options["landing_pages"];
+    $options = (array) get_option("wposso_options", array());
+    $landing_pages = isset($options["landing_pages"]) ? (string) $options["landing_pages"] : '';
 
     preg_match_all('/^(?!#)([\w-]+)=(.+)/m', $landing_pages, $matches);
 
     $landing_pages_r = array_combine($matches[1], $matches[2]);
 
     foreach ($landing_pages_r as $scope => $landing_page) {
-        if (in_array($scope, $scopes)) {
+        if (in_array($scope, (array) $scopes)) {
 
-            wp_redirect($landing_page);
+            wp_redirect(esc_url_raw(trim($landing_page)));
             exit;
         }
     }

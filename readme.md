@@ -1,8 +1,9 @@
 === IDer Login for Wordpress ===
 Tags: IDer, login, sso, qrcode, openid, client, oauth2
-Requires at least: 4.6
-Tested up to: 6.5.3
-Stable tag: 2.1
+Requires at least: 5.0
+Tested up to: 7.1
+Requires PHP: 7.4
+Stable tag: 2.3
 License: Apache License, Version 2.0 or later
 License URI: http://directory.fsf.org/wiki/License:Apache2.0
 
@@ -82,3 +83,22 @@ But if you got a brilliant idea or suggestion we would love to hear from you.
 
 = 2.1 =
 * Improve address resolution.
+
+= 2.1 =
+* US field remap and dependency updates.
+
+= 2.2 =
+* Fixed stored XSS in the [ider_login_button] shortcode attributes (CVE-2024-11888).
+* Escaped the error page and the profile summary output.
+
+= 2.3 =
+* Tested with WordPress 7.1 and PHP 8.4.
+* Security: the IDer server TLS certificate is now always verified (WordPress CA bundle).
+* Security: strict OpenID Connect state and nonce checks, cryptographically secure random values.
+* Security: tokens, client secret and personal data are no longer written to the log; the log folder is protected from web access.
+* Security: data received from IDer can no longer overwrite WordPress roles, capabilities or sessions.
+* Security: settings are sanitized on save and escaped on output.
+* Fixed fatal errors on PHP 8 (profile summary, widget, sites without WooCommerce).
+* Rewrite rules are flushed only after activation or update instead of on every request.
+* Re-activating the plugin keeps the existing settings.
+* The IDer widget now respects the "Don't show logout" option.

@@ -71,7 +71,7 @@ class IDER_WooPage
     {
         global $wp_query;
         $is_endpoint = isset($wp_query->query_vars[self::$endpoint]);
-        if ($is_endpoint && !is_admin() && is_main_query() && in_the_loop() && is_account_page()) {
+        if ($is_endpoint && !is_admin() && is_main_query() && in_the_loop() && function_exists('is_account_page') && is_account_page()) {
             // New page title.
             $title = __('IDer Profile', 'woocommerce');
             remove_filter('the_title', array(__CLASS__, 'endpoint_title'));
@@ -88,12 +88,14 @@ class IDER_WooPage
     public static function  new_menu_items($items)
     {
         // Remove the logout menu item.
-        $logout = $items['customer-logout'];
+        $logout = isset($items['customer-logout']) ? $items['customer-logout'] : null;
         unset($items['customer-logout']);
         // Insert your custom endpoint.
         $items[self::$endpoint] = __('IDer Profile', 'woocommerce');
         // Insert back the logout item.
-        $items['customer-logout'] = $logout;
+        if ($logout !== null) {
+            $items['customer-logout'] = $logout;
+        }
         return $items;
     }
 

@@ -85,7 +85,11 @@ class IDER_Admin
      */
     public function options_do_page()
     {
-        $options = get_option($this->option_name);
+        $options = wp_parse_args((array) get_option($this->option_name, array()), array(
+            'client_id' => '', 'client_secret' => '', 'extra_scopes' => '', 'login_form_button' => false,
+            'welcome_page' => '', 'ider_admin_mode' => false, 'fields_mapping' => '', 'landing_pages' => '', 'button_css' => '',
+        ));
+        $name = esc_attr($this->option_name);
         ?>
         <div class="wrap">
             <h2>IDer Single Sign On Configuration</h2>
@@ -95,7 +99,7 @@ class IDER_Admin
                 <strong>Setting up IDer Client Account</strong>
                 <ol>
                     <li>Create a new client and set the Redirect URI (aka callback URL) to:
-                        <strong><?php echo site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL); ?></strong>
+                        <strong><?php echo esc_html(site_url(\IDERConnect\IDEROpenIDClient::$IDERRedirectURL)); ?></strong>
                     </li>
                     <li>Copy the Client ID and Client Secret in the text fields below.</li>
                     <li>Set the campaign id to retrieve the user data you chose.</li>
@@ -111,24 +115,24 @@ class IDER_Admin
                     <tr valign="top">
                         <th scope="row">Client ID</th>
                         <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[client_id]" min="10"
-                                   value="<?php echo $options["client_id"]; ?>"/>
+                            <input type="text" name="<?php echo $name ?>[client_id]" min="10"
+                                   value="<?php echo esc_attr($options["client_id"]); ?>"/>
                         </td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Client Secret</th>
                         <td>
-                            <input type="password" name="<?php echo $this->option_name ?>[client_secret]" min="10"
-                                   value="<?php echo $options["client_secret"]; ?>"/>
+                            <input type="password" name="<?php echo $name ?>[client_secret]" min="10"
+                                   value="<?php echo esc_attr($options["client_secret"]); ?>" autocomplete="new-password"/>
                         </td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Scope Name</th>
                         <td>
-                            <input type="text" name="<?php echo $this->option_name ?>[extra_scopes]" min="10"
-                                   value="<?php echo $options["extra_scopes"]; ?>"/>
+                            <input type="text" name="<?php echo $name ?>[extra_scopes]" min="10"
+                                   value="<?php echo esc_attr($options["extra_scopes"]); ?>"/>
                         </td>
                     </tr>
 
@@ -136,7 +140,7 @@ class IDER_Admin
 
                         <th scope="row">Add IDer button in the classic WP login form</th>
                         <td>
-                            <input type="checkbox" name="<?php echo $this->option_name ?>[login_form_button]"
+                            <input type="checkbox" name="<?php echo $name ?>[login_form_button]"
                                    value="1" <?php echo $options['login_form_button'] == 1 ? 'checked="checked"' : ''; ?> />
                         </td>
                     </tr>
@@ -144,10 +148,10 @@ class IDER_Admin
                     <tr valign="top">
                         <th scope="row">Welcome page</th>
                         <td>
-                            <?php echo site_url(); ?>/<input type="text"
-                                                             name="<?php echo $this->option_name ?>[welcome_page]"
+                            <?php echo esc_html(site_url()); ?>/<input type="text"
+                                                             name="<?php echo $name ?>[welcome_page]"
                                                              min="10"
-                                                             value="<?php echo preg_replace('/^(\/)*/i','',str_replace(site_url(), '' ,$options["welcome_page"])); ?>"/>
+                                                             value="<?php echo esc_attr(preg_replace('/^(\/)*/i','',str_replace(site_url(), '' ,$options["welcome_page"]))); ?>"/>
                         </td>
                     </tr>
 
@@ -155,7 +159,7 @@ class IDER_Admin
 
                         <th scope="row">Allow Login only to Administrator Users</th>
                         <td>
-                            <input type="checkbox" name="<?php echo $this->option_name ?>[ider_admin_mode]"
+                            <input type="checkbox" name="<?php echo $name ?>[ider_admin_mode]"
                                    value="1" <?php echo $options['ider_admin_mode'] == 1 ? 'checked="checked"' : ''; ?> />
                         </td>
                     </tr>
@@ -170,14 +174,14 @@ class IDER_Admin
                         <th scope="row">Field Mapping</th>
                         <td>
                             <textarea
-                                name="<?php echo $this->option_name ?>[fields_mapping]"><?php echo $options["fields_mapping"]; ?></textarea>
+                                name="<?php echo $name ?>[fields_mapping]"><?php echo esc_textarea($options["fields_mapping"]); ?></textarea>
                         </td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Campaigns Landing pages</th>
                         <td>
-                            <textarea name="<?php echo $this->option_name ?>[landing_pages]"><?php echo $options["landing_pages"]; ?></textarea>
+                            <textarea name="<?php echo $name ?>[landing_pages]"><?php echo esc_textarea($options["landing_pages"]); ?></textarea>
                         </td>
                     </tr>
 
@@ -185,7 +189,7 @@ class IDER_Admin
                         <th scope="row">IDer Button additional css</th>
                         <td>
                             <textarea
-                                name="<?php echo $this->option_name ?>[button_css]"><?php echo $options["button_css"]; ?></textarea>
+                                name="<?php echo $name ?>[button_css]"><?php echo esc_textarea($options["button_css"]); ?></textarea>
 
                         </td>
                     </tr>
@@ -193,7 +197,7 @@ class IDER_Admin
                 </table>
 
                 <p class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>"/>
+                    <input type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>"/>
                 </p>
             </form>
         </div>
@@ -208,16 +212,27 @@ class IDER_Admin
      */
     public function validate($input)
     {
-        $input['client_id'] = trim($input['client_id']);
-        $input['client_secret'] = trim($input['client_secret']);
-        $input['extra_scopes'] = trim($input['extra_scopes']);
-        $input['welcome_page'] = site_url(trim($input['welcome_page']));
+        $input = (array) $input;
+        $text = function ($key) use ($input) {
+            return isset($input[$key]) ? sanitize_text_field((string) $input[$key]) : '';
+        };
+        $area = function ($key) use ($input) {
+            return isset($input[$key]) ? sanitize_textarea_field((string) $input[$key]) : '';
+        };
 
-        // fix null being set in case of booleans 
-        $input['login_form_button'] = (boolean)$input['login_form_button'];
-        $input['ider_admin_mode'] = (boolean)$input['ider_admin_mode'];
-
-        return $input;
+        return array(
+            'client_id' => $text('client_id'),
+            // secrets may contain characters that sanitize_text_field() would alter
+            'client_secret' => isset($input['client_secret']) ? trim(wp_strip_all_tags((string) $input['client_secret'])) : '',
+            'extra_scopes' => $text('extra_scopes'),
+            'welcome_page' => esc_url_raw(site_url(ltrim($text('welcome_page'), '/'))),
+            // fix null being set in case of booleans
+            'login_form_button' => !empty($input['login_form_button']),
+            'ider_admin_mode' => !empty($input['ider_admin_mode']),
+            'fields_mapping' => $area('fields_mapping'),
+            'landing_pages' => $area('landing_pages'),
+            'button_css' => wp_strip_all_tags($area('button_css')),
+        );
     }
 }
 

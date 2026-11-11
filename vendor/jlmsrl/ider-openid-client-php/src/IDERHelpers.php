@@ -25,7 +25,7 @@ class IDERHelpers
 
         if (!file_exists($fullpath)) {
             touch($fullpath);
-            chmod($fullpath, 0666);
+            chmod($fullpath, 0640);
         }
 
         // 5 mb
@@ -40,7 +40,7 @@ class IDERHelpers
             rename($fullpath, $filename . '.' . $n . $ext);
 
             touch($fullpath);
-            chmod($fullpath, 0666);
+            chmod($fullpath, 0640);
         }
 
         if (!is_writable($fullpath)) {

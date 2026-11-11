@@ -220,7 +220,8 @@ class IDEROpenIDClient
 
         // Do a preemptive check to see if the provider has thrown an error from a previous redirect
         if (isset($_REQUEST['error'])) {
-            throw new OpenIDConnectClientException("Error: " . $_REQUEST['error'] . " Description: " . $_REQUEST['error_description']);
+            $description = isset($_REQUEST['error_description']) ? $_REQUEST['error_description'] : '';
+            throw new OpenIDConnectClientException("Error: " . $_REQUEST['error'] . " Description: " . $description);
         }
 
         // If we have an authorization code then proceed to request a token
@@ -238,8 +239,11 @@ class IDEROpenIDClient
                 throw new OpenIDConnectClientException('Got response: ' . $token_json->error);
             }
 
-            // Do an OpenID Connect session check
-            if ($_REQUEST['state'] != $_SESSION['openid_connect_state']) {
+            // Do an OpenID Connect session check (strict: both values must exist and match)
+            $state = isset($_REQUEST['state']) ? (string) $_REQUEST['state'] : '';
+            $expected_state = isset($_SESSION['openid_connect_state']) ? (string) $_SESSION['openid_connect_state'] : '';
+            unset($_SESSION['openid_connect_state']);
+            if ($state === '' || $expected_state === '' || !hash_equals($expected_state, $state)) {
                 throw new OpenIDConnectClientException("Unable to determine state");
             }
 
@@ -459,7 +463,7 @@ class IDEROpenIDClient
      */
     protected function generateRandString()
     {
-        return md5(uniqid(rand(), TRUE));
+        return bin2hex(random_bytes(16));
     }
 
     /**
@@ -486,8 +490,7 @@ class IDEROpenIDClient
         $state = $this->generateRandString();
         $_SESSION['openid_connect_state'] = $state;
 
-        IDERHelpers::logRotate('set state: ' . $state, static::$IDERLogFile);
-        IDERHelpers::logRotate('set nonce: ' . $nonce, static::$IDERLogFile);
+        IDERHelpers::logRotate('state and nonce set', static::$IDERLogFile);
 
 
         $auth_params = array_merge($this->authParams, array(
@@ -677,9 +680,14 @@ class IDEROpenIDClient
     {
         IDERHelpers::logRotate('verifyJWTclaims()', static::$IDERLogFile);
 
-        return (($claims->exp > gmdate('U')) && ($claims->iss == $this->getProviderURL())
-            && (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud)))
-            && ($claims->nonce == $_SESSION['openid_connect_nonce']));
+        $expected_nonce = isset($_SESSION['openid_connect_nonce']) ? (string) $_SESSION['openid_connect_nonce'] : '';
+        $nonce = isset($claims->nonce) ? (string) $claims->nonce : '';
+        $aud = isset($claims->aud) ? $claims->aud : null;
+
+        return (isset($claims->exp) && ($claims->exp > gmdate('U'))
+            && isset($claims->iss) && ($claims->iss == $this->getProviderURL())
+            && (($aud == $this->clientID) || (is_array($aud) && in_array($this->clientID, $aud, true)))
+            && $expected_nonce !== '' && hash_equals($expected_nonce, $nonce));
 
     }
 
@@ -739,7 +747,8 @@ class IDEROpenIDClient
 
             $this->userInfo = $user_json;
 
-            IDERHelpers::logRotate('Request: ' . print_r($this->userInfo, 1), static::$IDERLogFile);
+            // personal data is not written to the log, only the received claim names
+            IDERHelpers::logRotate('Userinfo claims: ' . implode(', ', array_keys((array) $this->userInfo)), static::$IDERLogFile);
 
         }
 
@@ -762,8 +771,8 @@ class IDEROpenIDClient
     protected function fetchURL($url, $post_body = null, $headers = array())
     {
         IDERHelpers::logRotate('fetchURL(): ' . $url, static::$IDERLogFile);
-        IDERHelpers::logRotate('Request headers: ' . print_r($headers, 1), static::$IDERLogFile);
-        IDERHelpers::logRotate('Request body: ' . print_r($post_body, 1), static::$IDERLogFile);
+        // headers and body contain tokens, codes and the client secret: never log them
+        IDERHelpers::logRotate('Request headers: ' . count((array) $headers) . ', body: ' . ($post_body === null ? 'none' : strlen((string) $post_body) . ' bytes'), static::$IDERLogFile);
 
 
         // OK cool - then let's create a new cURL resource handle

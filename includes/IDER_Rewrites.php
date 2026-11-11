@@ -43,10 +43,16 @@ class IDER_Rewrites
         return $qvars;
     }
 
+    // Flushing is expensive: do it only once per plugin version (or after activation).
     static function flush_rewrite_rules()
     {
+        if (get_option('ider_rewrite_version') === IDER_CLIENT_VERSION) {
+            return;
+        }
+
         global $wp_rewrite;
-        $wp_rewrite->flush_rules();
+        $wp_rewrite->flush_rules(false);
+        update_option('ider_rewrite_version', IDER_CLIENT_VERSION);
     }
 
     static function template_redirect_intercept()

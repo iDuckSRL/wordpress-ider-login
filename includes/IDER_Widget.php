@@ -41,15 +41,14 @@ class IDER_Widget extends WP_Widget {
      */
     public function widget( $args, $instance ) {
 
-        //var_dump($instance);
         echo $args['before_widget'];
         if ( ! empty( $instance['title'] ) ) {
-            echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
+            echo $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'];
         }
 
-        unset($args['class']);
-
-        echo IDER_Shortcodes::ider_login_button($args);
+        echo IDER_Shortcodes::ider_login_button( array(
+            'loginonly' => ! empty( $instance['loginonly'] ) ? '1' : '',
+        ) );
         echo $args['after_widget'];
     }
 
@@ -63,12 +62,12 @@ class IDER_Widget extends WP_Widget {
      */
     public function form( $instance ) {
 
-        $checked = !empty($instance['loginonly']) ? 'checked="checked' : '';
+        $checked = !empty($instance['loginonly']) ? 'checked="checked"' : '';
 
         ?>
         <p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'loginonly' ) ); ?>">
-                <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'loginonly' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'loginonly' ) ); ?>" type="checkbox" value="1" <?php echo $checked; ?>">
+                <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'loginonly' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'loginonly' ) ); ?>" type="checkbox" value="1" <?php echo $checked; ?>>
                 <?php esc_attr_e( 'Don\'t show logout', 'text_domain' ); ?>
             </label>
         </p>
@@ -80,7 +79,7 @@ class IDER_Widget extends WP_Widget {
         $instance = $old_instance;
 
         //print_r($new_instance);
-        $instance[ 'loginonly' ] = strip_tags( $new_instance[ 'loginonly' ] );
+        $instance[ 'loginonly' ] = ! empty( $new_instance[ 'loginonly' ] ) ? '1' : '';
         return $instance;
     }
 
